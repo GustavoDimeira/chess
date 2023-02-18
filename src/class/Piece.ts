@@ -4,7 +4,7 @@ export default abstract class Piece {
   constructor(
     protected name: string,
     protected position: string | null,
-    protected collor: 'w' | 'b',
+    public collor: 'w' | 'b',
     public isSelected: boolean = false,
   ) { };
 
@@ -65,5 +65,5 @@ export default abstract class Piece {
     return avaliable;
   }
 
-  protected abstract move(board: Square[], max?: number): number[];
+  protected abstract getMove(board: Square[], max?: number): number[];
 }

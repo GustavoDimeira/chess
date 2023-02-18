@@ -5,12 +5,12 @@ export default class Rook extends Piece {
   constructor(
     protected name: string,
     protected position: string,
-    protected collor: 'w' | 'b',
+    public collor: 'w' | 'b',
   ) {
     super(name, position, collor);
   }
 
-  public move(board: Square[]): number[] {
+  public getMove(board: Square[]): number[] {
     const collun = Number(this.position.split('x')[0]);
     const line = Number(this.position.split('x')[1]);
     
