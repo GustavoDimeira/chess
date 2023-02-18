@@ -37,17 +37,3 @@ export default class Queen extends Piece {
     return [...straight, ...diagonal];
   };
 }
-const queen = new Queen('queen_1', '0x0', 'w');
-
-const board = []
-
-for (let x = 0; x <= 7; x+= 1) {
-  for (let y = 0; y <= 7;  y+= 1) {
-    board.push({
-      position: `${x}x${y}`,
-      ocupatedBy: null,
-    });
-  }
-}
-
-console.log(queen.move(board));

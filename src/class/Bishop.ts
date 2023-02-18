@@ -19,17 +19,3 @@ export default class Bishop extends Piece {
     return [...bottRight, ...bottLeft, ...topRight, ...topLeft];
   };
 }
-const bishop = new Bishop('bishop_1', '0x0', 'w');
-
-const board = []
-
-for (let x = 0; x <= 7; x+= 1) {
-  for (let y = 0; y <= 7;  y+= 1) {
-    board.push({
-      position: `${x}x${y}`,
-      ocupatedBy: null,
-    });
-  }
-}
-
-console.log(bishop.move(board));
