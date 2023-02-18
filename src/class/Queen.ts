@@ -1,7 +1,7 @@
 import Piece from "./Piece";
 import Square from './Square';
 
-export default class Rook extends Piece {
+export default class Queen extends Piece {
   constructor(
     protected name: string,
     protected position: string,
@@ -21,16 +21,23 @@ export default class Rook extends Piece {
       return ((collun +  positionPlus) * 8 + line);
     }
 
+    const bottRight = this.diagonalMove(board, 1, 1);
+    const bottLeft = this.diagonalMove(board, 1, -1);
+    const topRight = this.diagonalMove(board, -1, 1);
+    const topLeft = this.diagonalMove(board, -1, -1);
+
     const up = this.straightMove(board, -1, collun, formulaCollun);
     const down = this.straightMove(board, 1, collun, formulaCollun);
     const left = this.straightMove(board, -1, line, formulaLine);
     const right = this.straightMove(board, 1, line, formulaLine);
 
-    return [...up, ...down, ...left, ...right];
+    const straight = [...up, ...down, ...left, ...right];
+    const diagonal = [...bottRight, ...bottLeft, ...topRight, ...topLeft];
+
+    return [...straight, ...diagonal];
   };
 }
-
-const torre = new Rook('Rook_1', '0x0', 'w');
+const queen = new Queen('queen_1', '0x0', 'w');
 
 const board = []
 
@@ -43,4 +50,4 @@ for (let x = 0; x <= 7; x+= 1) {
   }
 }
 
-console.log(torre.move(board));
+console.log(queen.move(board));

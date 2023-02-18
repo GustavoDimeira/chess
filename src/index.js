@@ -4,7 +4,7 @@ import './index.css';
 
 ReactDOM.render(
   <div>
-    <h1>Hello, Welcome to React and TypeScript</h1>
+    <h1>a</h1>
   </div>,
   document.getElementById("root")
 );

@@ -2,9 +2,9 @@ import Square from './Square';
 
 export default abstract class Piece {
   constructor(
-    public name: string,
-    public position: string,
-    public collor: 'w' | 'b',
+    protected name: string,
+    protected position: string | null,
+    protected collor: 'w' | 'b',
     public isSelected: boolean = false,
   ) { };
 
@@ -14,7 +14,7 @@ export default abstract class Piece {
     const collun = Number(this.position.split('x')[0]);
     const line = Number(this.position.split('x')[1]);
 
-    const avaliable = [];
+    const avaliable: number[] = [];
     let hasPeace;
 
     for (let positionPlus = 1;
@@ -41,7 +41,7 @@ export default abstract class Piece {
     const collun = Number(this.position.split('x')[0]);
     const line = Number(this.position.split('x')[1]);
 
-    const avaliable = [];
+    const avaliable: number[] = [];
     let hasPeace;
 
     for (let positionPlus = 1;
