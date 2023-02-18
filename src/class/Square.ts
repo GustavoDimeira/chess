@@ -1,6 +1,8 @@
+import Piece from "./Piece";
+
 export default class Square {
   constructor(
     public position: string,
-    public ocupatedBy: string | null = null,
+    public ocupatedBy: Piece | null = null,
   ) {}
 }
