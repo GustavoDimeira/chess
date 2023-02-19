@@ -3,16 +3,21 @@ import Square from './Square';
 
 export default class Rook extends Piece {
   constructor(
-    protected name: string,
+    public name: string,
     protected position: string,
     public collor: 'w' | 'b',
   ) {
     super(name, position, collor);
   }
 
-  public getMove(board: Square[]): number[] {
+  public getMoves(board: Square[]): number[] {
     const collun = Number(this.position.split('x')[0]);
     const line = Number(this.position.split('x')[1]);
+
+    this.attacking.forEach((i) => {
+      const nameIndex = board[i].attackedBy[this.collor].findIndex((iN) => iN === this.name);
+      board[i].attackedBy[this.collor].splice(nameIndex, 1);
+    })
     
     const formulaLine = (collun: number, line: number, positionPlus: number) => {
       return (collun * 8 + (line + positionPlus));
@@ -26,6 +31,9 @@ export default class Rook extends Piece {
     const left = this.straightMove(board, -1, line, formulaLine);
     const right = this.straightMove(board, 1, line, formulaLine);
 
-    return [...up, ...down, ...left, ...right];
+    const result = [...up, ...down, ...left, ...right];
+
+    this.attacking = result;
+    return result;
   };
 }

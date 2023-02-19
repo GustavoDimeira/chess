@@ -3,14 +3,14 @@ import Square from './Square';
 
 export default class Queen extends Piece {
   constructor(
-    protected name: string,
-    protected position: string,
+    public name: string,
+    public position: string,
     public collor: 'w' | 'b',
   ) {
     super(name, position, collor);
   }
 
-  public getMove(board: Square[]): number[] {
+  public getMoves(board: Square[]): number[] {
     const collun = Number(this.position.split('x')[0]);
     const line = Number(this.position.split('x')[1]);
     
@@ -20,6 +20,11 @@ export default class Queen extends Piece {
     const formulaCollun = (collun: number, line: number, positionPlus: number) => {
       return ((collun +  positionPlus) * 8 + line);
     }
+
+    this.attacking.forEach((i) => {
+      const nameIndex = board[i].attackedBy[this.collor].findIndex((iN) => iN === this.name);
+      board[i].attackedBy[this.collor].splice(nameIndex, 1);
+    })
 
     const bottRight = this.diagonalMove(board, 1, 1);
     const bottLeft = this.diagonalMove(board, 1, -1);
@@ -34,6 +39,9 @@ export default class Queen extends Piece {
     const straight = [...up, ...down, ...left, ...right];
     const diagonal = [...bottRight, ...bottLeft, ...topRight, ...topLeft];
 
-    return [...straight, ...diagonal];
+    const result =  [...straight, ...diagonal];
+
+    this.attacking = result;
+    return result;
   };
 }

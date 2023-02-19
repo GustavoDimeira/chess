@@ -1,12 +1,16 @@
+import ChessPiece from "./ChessPiece";
 import Square from "./Square";
 
-export default class Pawn {
+export default class Pawn extends ChessPiece {
   constructor(
     public name: string,
     public position: string,
     public collor: 'w' | 'b',
     public isFirstMove: boolean = true,
-  ) {}
+    public attacking: number[] = [],
+  ) {
+    super(name, position, collor);
+  }
 
   public getMoves (board: Square[]): number[] {
     const collun = Number(this.position.split('x')[0]);
@@ -28,20 +32,32 @@ export default class Pawn {
       response.push(forward);
     };
 
-    // get catches
-    if (
-      left !== false &&
-      board[left].ocupatedBy &&
-      board[left].ocupatedBy.collor !== this.collor
-    ) response.push(left);
+    this.attacking = [];
 
-    if (
-      right !== false &&
-      board[right].ocupatedBy &&
-      board[right].ocupatedBy.collor !== this.collor
-    ) response.push(right);
+    // get catches
+    if (left !== false)  {
+      if (
+        board[left].ocupatedBy &&
+        board[left].ocupatedBy.collor !== this.collor
+      ) { response.push(left); }
+      board[left].attackedBy[this.collor].push(this.name);
+      this.attacking.push(left);
+    };
+
+    if (right !== false)  {
+      if (
+        board[right].ocupatedBy &&
+        board[right].ocupatedBy.collor !== this.collor
+      ) { response.push(right); }
+      board[right].attackedBy[this.collor].push(this.name);
+      this.attacking.push(right);
+    };
 
     return response;
+  };
+
+  public moveTo(board: Square[], target: number): boolean {
+    return true;
   };
 }
 
@@ -57,6 +73,10 @@ for (let x = 0; x <= 7; x+= 1) {
     board.push({
       position: `${x}x${y}`,
       ocupatedBy: null,
+      attackedBy: {
+        w: ['a'],
+        b: ['b'],
+      },
     });
   }
 }
@@ -64,6 +84,10 @@ for (let x = 0; x <= 7; x+= 1) {
 board[17] = {
   position: '2x1',
   ocupatedBy: Pawn_7,
+  attackedBy: {
+    w: ['a'],
+    b: ['a'],
+  },
 }
 
 console.log(Pawn_1.getMoves(board));

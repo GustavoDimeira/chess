@@ -3,14 +3,14 @@ import Square from './Square';
 
 export default class King extends Piece {
   constructor(
-    protected name: string,
+    public name: string,
     protected position: string,
     public collor: 'w' | 'b',
   ) {
     super(name, position, collor);
   }
 
-  public getMove(board: Square[]): number[] {
+  public getMoves(board: Square[]): number[] {
     const collun = Number(this.position.split('x')[0]);
     const line = Number(this.position.split('x')[1]);
     
@@ -34,6 +34,9 @@ export default class King extends Piece {
     const straight = [...up, ...down, ...left, ...right];
     const diagonal = [...bottRight, ...bottLeft, ...topRight, ...topLeft];
 
-    return [...straight, ...diagonal];
+    const result = [...straight, ...diagonal];
+
+    this.attacking = result;
+    return result;
   };
 }
