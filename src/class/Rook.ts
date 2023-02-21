@@ -11,9 +11,6 @@ export default class Rook extends Piece {
   }
 
   public getMoves(board: Square[]): number[] {
-    const collun = Number(this.position.split('x')[0]);
-    const line = Number(this.position.split('x')[1]);
-    
     const formulaLine = (collun: number, line: number, positionPlus: number) => {
       return (collun * 8 + (line + positionPlus));
     }
@@ -23,13 +20,13 @@ export default class Rook extends Piece {
 
     this.attacking.forEach((i) => {
       const nameIndex = board[i].attackedBy[this.collor].findIndex((iN) => iN === this.name);
-      board[i].attackedBy[this.collor].splice(nameIndex, 1);
+      board[i].attackedBy[this.collor].splice(nameIndex, 1).filter(( item, i2, array ) => array.indexOf(item) === i2);
     });
 
-    const up = this.straightMove(board, -1, collun, formulaCollun);
-    const down = this.straightMove(board, 1, collun, formulaCollun);
-    const left = this.straightMove(board, -1, line, formulaLine);
-    const right = this.straightMove(board, 1, line, formulaLine);
+    const up = this.straightMove(board, -1, this.collun, formulaCollun);
+    const down = this.straightMove(board, 1, this.collun, formulaCollun);
+    const left = this.straightMove(board, -1, this.line, formulaLine);
+    const right = this.straightMove(board, 1, this.line, formulaLine);
 
     const result = [...up, ...down, ...left, ...right];
 

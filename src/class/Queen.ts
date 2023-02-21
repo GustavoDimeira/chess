@@ -11,9 +11,6 @@ export default class Queen extends Piece {
   }
 
   public getMoves(board: Square[]): number[] {
-    const collun = Number(this.position.split('x')[0]);
-    const line = Number(this.position.split('x')[1]);
-    
     const formulaLine = (collun: number, line: number, positionPlus: number) => {
       return (collun * 8 + (line + positionPlus));
     }
@@ -31,10 +28,10 @@ export default class Queen extends Piece {
     const topRight = this.diagonalMove(board, -1, 1);
     const topLeft = this.diagonalMove(board, -1, -1);
 
-    const up = this.straightMove(board, -1, collun, formulaCollun);
-    const down = this.straightMove(board, 1, collun, formulaCollun);
-    const left = this.straightMove(board, -1, line, formulaLine);
-    const right = this.straightMove(board, 1, line, formulaLine);
+    const up = this.straightMove(board, -1, this.collun, formulaCollun);
+    const down = this.straightMove(board, 1, this.collun, formulaCollun);
+    const left = this.straightMove(board, -1, this.line, formulaLine);
+    const right = this.straightMove(board, 1, this.line, formulaLine);
 
     const straight = [...up, ...down, ...left, ...right];
     const diagonal = [...bottRight, ...bottLeft, ...topRight, ...topLeft];

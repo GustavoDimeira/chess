@@ -6,7 +6,7 @@ export default class Square {
     public ocupatedBy: ChessPiece | null = null,
     public attackedBy: {
       b: string[],
-      w: (string | number)[]
+      w: string[]
     } = { b: [], w: [] },
     public isAvaliable: boolean = false
   ) {}
