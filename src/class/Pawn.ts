@@ -1,6 +1,8 @@
 import ChessPiece from "./ChessPiece";
 import Square from "./Square";
 
+// broken
+
 export default class Pawn extends ChessPiece {
   constructor(
     public name: string,
@@ -24,6 +26,13 @@ export default class Pawn extends ChessPiece {
 
     const response: number[] = [];
 
+    this.attacking.forEach((i) => {
+      const nameIndex = board[i].attackedBy[this.collor].findIndex((iN) => iN === this.name);
+      board[i].attackedBy[this.collor].splice(nameIndex, 1);
+    });
+    
+    this.attacking = [];
+
     // get move
     if (board[forward] && !board[forward].ocupatedBy) {
       if (board[forward + (8 * direction)] && !board[forward + (8 * direction)].ocupatedBy && this.isFirstMove) {
@@ -32,63 +41,72 @@ export default class Pawn extends ChessPiece {
       response.push(forward);
     };
 
-    this.attacking = [];
-
     // get catches
     if (left !== false)  {
       if (
-        board[left].ocupatedBy &&
-        board[left].ocupatedBy.collor !== this.collor
+        board[left].ocupatedBy !== null &&
+        board[left].ocupatedBy?.collor !== this.collor
       ) { response.push(left); }
       board[left].attackedBy[this.collor].push(this.name);
-      this.attacking.push(left);
     };
 
     if (right !== false)  {
       if (
-        board[right].ocupatedBy &&
-        board[right].ocupatedBy.collor !== this.collor
-      ) { response.push(right); }
+        board[right].ocupatedBy !== null &&
+        board[right].ocupatedBy?.collor !== this.collor
+      ) response.push(right);
       board[right].attackedBy[this.collor].push(this.name);
-      this.attacking.push(right);
     };
+
+    this.attacking = response;
 
     return response;
   };
 
   public moveTo(board: Square[], target: number): boolean {
-    return true;
+    if (this.attacking.includes(target)) {
+      const collun = Number(this.position.split('x')[0]);
+      const line = Number(this.position.split('x')[1]);
+
+      const crrIndex = collun * 8 + line
+
+      board[crrIndex].ocupatedBy = null;
+      
+      this.position = board[target].position;
+      board[target].ocupatedBy = this;
+
+      board[crrIndex].attackedBy.w.forEach((name) => {
+        const piece = board.find((square) => square.ocupatedBy?.name === name)?.ocupatedBy;
+        piece?.getMoves(board);
+      });
+      
+      board[crrIndex].attackedBy.b.forEach((name) => {
+        const piece = board.find((square) => square.ocupatedBy?.name === name)?.ocupatedBy;
+        piece?.getMoves(board);
+      });
+
+      board[target].attackedBy.w.forEach((name) => {
+        const piece = board.find((square) => square.ocupatedBy?.name === name)?.ocupatedBy;
+        piece?.getMoves(board);
+      });
+      
+      board[target].attackedBy.b.forEach((name) => {
+        const piece = board.find((square) => square.ocupatedBy?.name === name)?.ocupatedBy;
+        piece?.getMoves(board);
+      });
+
+      this.getMoves(board);
+
+      return true;
+    } return false;
+  };
+
+  protected killPiece(board: Square[], target: number) {
+    console.log(1)
+    const piece = board[target].ocupatedBy;
+    piece?.attacking.forEach((i) => {
+      const nameIndex = board[i].attackedBy[piece.collor].findIndex((iN) => iN === this.name);
+      board[i].attackedBy[this.collor].splice(nameIndex, 1);
+    });
   };
 }
-
-const Pawn_1 = new Pawn('Pawn_1', '1x0', 'b');
-const Pawn_3 = new Pawn('Pawn_3', '1x1', 'b');
-
-const Pawn_7 = new Pawn('Pawn_7', '2x1', 'w');
-
-const board = [];
-
-for (let x = 0; x <= 7; x+= 1) {
-  for (let y = 0; y <= 7;  y+= 1) {
-    board.push({
-      position: `${x}x${y}`,
-      ocupatedBy: null,
-      attackedBy: {
-        w: ['a'],
-        b: ['b'],
-      },
-    });
-  }
-}
-
-board[17] = {
-  position: '2x1',
-  ocupatedBy: Pawn_7,
-  attackedBy: {
-    w: ['a'],
-    b: ['a'],
-  },
-}
-
-console.log(Pawn_1.getMoves(board));
-console.log(Pawn_3.getMoves(board));

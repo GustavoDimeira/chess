@@ -21,6 +21,11 @@ export default class King extends Piece {
       return ((collun +  positionPlus) * 8 + line);
     }
 
+    this.attacking.forEach((i) => {
+      const nameIndex = board[i].attackedBy[this.collor].findIndex((iN) => iN === this.name);
+      board[i].attackedBy[this.collor].splice(nameIndex, 1);
+    });
+
     const bottRight = this.diagonalMove(board, 1, 1, 1);
     const bottLeft = this.diagonalMove(board, 1, -1, 1);
     const topRight = this.diagonalMove(board, -1, 1, 1);

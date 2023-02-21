@@ -4,9 +4,8 @@ import ChessPiece from './ChessPiece';
 export default abstract class Piece extends ChessPiece {
   constructor(
     public name: string,
-    protected position: string | null,
+    protected position: string,
     public collor: 'w' | 'b',
-    public attacking: number[] = [],
   ) { 
     super(name, position, collor);
   };
@@ -103,33 +102,35 @@ export default abstract class Piece extends ChessPiece {
 
       board[crrIndex].ocupatedBy = null;
       
+      this.killPiece(board, target); 
+
       this.position = board[target].position;
       board[target].ocupatedBy = this;
 
-      board[crrIndex].attackedBy.w.forEach((name) => {
-        const piece = board.find((square) => square.ocupatedBy?.name === name).ocupatedBy;
-        piece.getMoves(board);
-      });
-      
-      board[crrIndex].attackedBy.b.forEach((name) => {
-        const piece = board.find((square) => square.ocupatedBy?.name === name).ocupatedBy;
-        piece.getMoves(board);
-      });
+      const recalcAttackOff = [
+        ...board[crrIndex].attackedBy.w,
+        ...board[crrIndex].attackedBy.b,
+        ...board[target].attackedBy.w,
+        ...board[target].attackedBy.b,
+      ];
 
-      board[target].attackedBy.w.forEach((name) => {
-        const piece = board.find((square) => square.ocupatedBy?.name === name).ocupatedBy;
-        piece.getMoves(board);
+      recalcAttackOff.forEach((name) => {
+        const piece = board.find((square) => square.ocupatedBy?.name === name)?.ocupatedBy;
+        piece?.getMoves(board);
       });
-      
-      board[target].attackedBy.b.forEach((name) => {
-        const piece = board.find((square) => square.ocupatedBy?.name === name).ocupatedBy;
-        piece.getMoves(board);
-      });
-
 
       this.getMoves(board);
 
-      return true
-    } return false;
+      return true;
+    } return false; 
+  };
+
+  protected killPiece(board: Square[], target: number) {
+    const piece = board[target].ocupatedBy;
+    console.log(piece);
+    piece?.attacking.forEach((i) => {
+      const nameIndex = board[i].attackedBy[piece.collor].findIndex((iN) => iN === piece.name);
+      board[i].attackedBy[piece.collor].splice(nameIndex, 1);
+    });
   };
 }

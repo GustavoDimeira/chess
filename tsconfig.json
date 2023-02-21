@@ -1,11 +1,16 @@
 {
+  "extends": "@tsconfig/node16/tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist/",
-    "noImplicitAny": true,
-    "module": "es6",
-    "target": "es5",
+    "lib": ["dom"],
     "jsx": "react",
-    "allowJs": true,
-    "moduleResolution": "node",
+    "target": "es2016",                                 
+    "module": "commonjs",
+    "rootDir": "./",
+    "outDir": "./dist",
+    "preserveConstEnums": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true
   }
 }

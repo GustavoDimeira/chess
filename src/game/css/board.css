@@ -1,0 +1,16 @@
+.board {
+  padding-top: 30px;
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto auto auto;
+  justify-content: center;
+}
+
+.square {
+  height: 60px;
+  width: 60px;
+  border: 2px solid black;
+}
+
+.avaliable {
+  background-color: red;
+}
