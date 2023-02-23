@@ -6,8 +6,9 @@ export default class Queen extends Piece {
     public name: string,
     public position: string,
     public collor: 'w' | 'b',
+    public icon: string,
   ) {
-    super(name, position, collor);
+    super(name, position, collor, icon);
   }
 
   public getMoves(board: Square[]): number[] {

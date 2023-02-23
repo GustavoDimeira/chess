@@ -1,16 +1,55 @@
 .board {
-  padding-top: 30px;
   display: grid;
   grid-template-columns: auto auto auto auto auto auto auto auto;
-  justify-content: center;
+
+  width: fit-content;
+  height: fit-content;
+  margin-top: 30px;
+
+  border: 6px rgb(0, 0, 0) solid;
+  
+  background-color: black;
 }
 
 .square {
-  height: 60px;
-  width: 60px;
+  height: 70px;
+  width: 70px;
+
   border: 2px solid black;
+  border-radius: 8%;
 }
 
-.avaliable {
-  background-color: red;
+p {
+  font-size: 65px;
+  text-align: center;
+  margin: 0px;
+  margin-top: 1px;
+  color: rgb(255, 255, 255);
+
+  height: 100%;
+
+  -webkit-touch-callout: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.black {
+  background-color: rgb(0, 0, 0);
+}
+
+.white {
+  background-color: rgba(57, 107, 47, 0.979);
+}
+
+.avaliable.attacked p {
+  border-radius: 100%;
+  margin-top: 0px;
+  border: rgb(255, 0, 0) 1px solid;
+}
+
+.avaliable p {
+  border-radius: 100%;
+  margin-top: 0px;
+  border: rgb(255, 255, 255) 1px solid;
 }

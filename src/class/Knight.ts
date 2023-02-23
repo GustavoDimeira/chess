@@ -6,8 +6,9 @@ export default class Knight extends Piece {
     public name: string,
     protected position: string,
     public collor: 'w' | 'b',
+    public icon: string,
   ) {
-    super(name, position, collor);
+    super(name, position, collor, icon);
   }
 
   public getMoves(board: Square[]): number[] {

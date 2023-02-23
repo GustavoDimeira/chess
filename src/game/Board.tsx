@@ -9,9 +9,10 @@ import Square from '../class/Square';
 export default function Board() {
   const [board, changeBoard] = useState<Square[]>([]);
   let tempBoard = [...board];
-  
   const [squareSelected, changeSelected] = useState<Square | null>(null);
+  const [turne, changeTurne] = useState<'w' | 'b'>('w');
 
+  //set default board
   useEffect(() => {
     tempBoard = boardStandart;
     changeBoard(tempBoard);
@@ -33,8 +34,10 @@ export default function Board() {
 
   //moveOrCapture
   const selectSqrHandler = (square: Square, indexTarget: number) => {
-    if (squareSelected?.ocupatedBy) {
-      squareSelected.ocupatedBy.moveTo(tempBoard, indexTarget);
+    if (squareSelected?.ocupatedBy?.collor === turne) {
+      if (squareSelected.ocupatedBy.moveTo(tempBoard, indexTarget)) {
+        changeTurne(turne === 'w' ? 'b' : 'w');
+      };
       changeSelected(null);
     } else {
       changeSelected(square);
@@ -49,11 +52,22 @@ export default function Board() {
           return (
             <div
               key={ square.position }
-              className={ `square ${square.isAvaliable ? 'avaliable': ''}` }
+              className={
+                `
+                  square
+                  ${ square.isAvaliable ? 'avaliable' : '' }
+                  ${ square.ocupatedBy ? 'attacked' : '' }
+                  ${((Math.floor(i / 8) + i) % 2) > 0 ? 'black' : 'white'}
+                `
+              }
               onClick={ () => selectSqrHandler(square, i) }
             >
-              <p>
-              { `${square.ocupatedBy?.name || ''}` }
+              <p
+                className={
+                  ` ${ square.ocupatedBy?.collor || '' } `
+                }
+              >
+                { `${square.ocupatedBy?.icon || ''}` }
               </p>
             </div>
           )

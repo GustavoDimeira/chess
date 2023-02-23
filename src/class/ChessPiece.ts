@@ -5,6 +5,7 @@ export default abstract class ChessPiece {
     public name: string,
     protected position: string,
     public collor: 'w' | 'b',
+    public icon: string,
     public attacking: number[] = [],
     protected isFirstMove: boolean = true,
     protected collun: number = -1,
@@ -19,7 +20,7 @@ export default abstract class ChessPiece {
     if (this.attacking.includes(target)) {
       this.isFirstMove = false;
 
-      const crrIndex = this.collun * 8 + this.line
+      const crrIndex = this.collun * 8 + this.line;
 
       this.killPiece(board, target);
 
@@ -36,7 +37,9 @@ export default abstract class ChessPiece {
         ...board[target].attackedBy.w,
         ...board[target].attackedBy.b,
         board[target + 8]?.ocupatedBy?.name, board[target - 8]?.ocupatedBy?.name,
-        board[crrIndex + 8]?.ocupatedBy?.name, board[crrIndex - 8]?.ocupatedBy?.name
+        board[crrIndex + 8]?.ocupatedBy?.name, board[crrIndex - 8]?.ocupatedBy?.name,
+        board[target + 16]?.ocupatedBy?.name, board[target - 16]?.ocupatedBy?.name,
+        board[crrIndex + 16]?.ocupatedBy?.name, board[crrIndex - 16]?.ocupatedBy?.name,
       ];
 
       recalcAttackOff.forEach((name) => {
@@ -45,7 +48,6 @@ export default abstract class ChessPiece {
       });
 
       this.getMoves(board);
-      console.log(this.name);
 
       return true;
     } return false;

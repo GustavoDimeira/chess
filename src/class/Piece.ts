@@ -6,8 +6,9 @@ export default abstract class Piece extends ChessPiece {
     public name: string,
     protected position: string,
     public collor: 'w' | 'b',
+    public icon: string,
   ) { 
-    super(name, position, collor);
+    super(name, position, collor, icon);
   };
 
   protected straightMove(
