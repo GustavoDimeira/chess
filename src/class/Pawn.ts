@@ -27,8 +27,6 @@ export default class Pawn extends ChessPiece {
       const nameIndex = board[i].attackedBy[this.collor].findIndex((iN) => iN === this.name);
       board[i].attackedBy[this.collor].splice(nameIndex, 1);
     });
-    
-    this.attacking = [];
 
     // get move
     if (board[forward] && !board[forward]?.ocupatedBy) {

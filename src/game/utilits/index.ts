@@ -42,7 +42,6 @@ const Bishop_b_1 = new Bishop('Bishop_b_1', '0x5', 'b', '♝');
 const Knight_b_1 = new Knight('Knight_b_1', '0x6', 'b', '♞');
 const Rook_b_1 = new Rook('Rook_b_1', '0x7', 'b', '♜');
 
-
 const Pawn_b_0 = new Pawn('Pawn_b_0', '1x0', 'b', '♟︎');
 const Pawn_b_1 = new Pawn('Pawn_b_1', '1x1', 'b', '♟︎');
 const Pawn_b_2 = new Pawn('Pawn_b_2', '1x2', 'b', '♟︎');

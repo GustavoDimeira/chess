@@ -55,8 +55,8 @@ export default function Board() {
               className={
                 `
                   square
+                  ${ square.ocupatedBy ? '' : 'empty' }
                   ${ square.isAvaliable ? 'avaliable' : '' }
-                  ${ square.ocupatedBy ? 'attacked' : '' }
                   ${((Math.floor(i / 8) + i) % 2) > 0 ? 'black' : 'white'}
                 `
               }
@@ -67,7 +67,7 @@ export default function Board() {
                   ` ${ square.ocupatedBy?.collor || '' } `
                 }
               >
-                { `${square.ocupatedBy?.icon || ''}` }
+                { `${ square.ocupatedBy?.icon || (square.isAvaliable ? '·' : '') }` }
               </p>
             </div>
           )
