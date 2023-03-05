@@ -1,3 +1,7 @@
+body {
+  -webkit-font-smoothing: antialiased;
+}
+
 .board {
   display: grid;
   grid-template-columns: auto auto auto auto auto auto auto auto;

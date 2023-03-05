@@ -19,10 +19,7 @@ export default class Rook extends Piece {
       return ((collun +  positionPlus) * 8 + line);
     }
 
-    this.attacking.forEach((i) => {
-      const nameIndex = board[i].attackedBy[this.collor].findIndex((iN) => iN === this.name);
-      board[i].attackedBy[this.collor].splice(nameIndex, 1).filter(( item, i2, array ) => array.indexOf(item) === i2);
-    });
+    this.resetAttacking(board);
 
     const up = this.straightMove(board, -1, this.collun, formulaCollun);
     const down = this.straightMove(board, 1, this.collun, formulaCollun);
@@ -30,6 +27,18 @@ export default class Rook extends Piece {
     const right = this.straightMove(board, 1, this.line, formulaLine);
 
     const result = [...up, ...down, ...left, ...right];
+
+    if (this.collor === 'b') {
+      const bKing = board[4].ocupatedBy;
+      if (bKing?.isFirstMove) {
+        bKing?.getMoves(board);
+      }
+    } else {
+      const wKing = board[60].ocupatedBy;
+      if (wKing?.isFirstMove) {
+        wKing?.getMoves(board);
+      }  
+    }
 
     this.attacking = result;
     return result;

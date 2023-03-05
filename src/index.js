@@ -5,8 +5,10 @@ import './index.css';
 import Board from './game/Board';
 
 ReactDOM.render(
-  <main>
-    <Board />
-  </main>,
+  <React.StrictMode>
+    <main>
+      <Board />
+    </main>
+  </React.StrictMode>,
   document.getElementById("root")
 );

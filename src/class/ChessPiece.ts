@@ -7,7 +7,7 @@ export default abstract class ChessPiece {
     public collor: 'w' | 'b',
     public icon: string,
     public attacking: number[] = [],
-    protected isFirstMove: boolean = true,
+    public isFirstMove: boolean = true,
     protected collun: number = -1,
     protected line: number = -1,
   ) {
@@ -15,9 +15,9 @@ export default abstract class ChessPiece {
     this.line = Number(this.position.split('x')[1]);
   };
   public abstract getMoves(board: Square[]): number[];
-  
-  public moveTo(board: Square[], target: number): boolean {
-    if (this.attacking.includes(target)) {
+
+  public moveTo(board: Square[], target: number, forceMove: boolean = false): boolean {
+    if (this.attacking.includes(target) || forceMove) {
       this.isFirstMove = false;
 
       const crrIndex = this.collun * 8 + this.line;
@@ -53,11 +53,23 @@ export default abstract class ChessPiece {
     } return false;
   };
 
-  protected killPiece(board: Square[], target: number) {
+  public killPiece(board: Square[], target: number) {
     const piece = board[target].ocupatedBy;
     piece?.attacking.forEach((i) => {
       const nameIndex = board[i].attackedBy[piece.collor].findIndex((iN) => iN === piece.name);
       board[i].attackedBy[piece.collor].splice(nameIndex, 1);
     });
+    if (piece) piece.attacking = [];
   };
+
+  protected resetAttacking(board: Square[]) {
+    this.attacking.forEach((squareI) => {
+      const nameIndex = board[squareI].attackedBy[this.collor].findIndex((iN) => iN === this.name);
+
+      board[squareI].attackedBy[this.collor] = [...new Set(board[squareI].attackedBy[this.collor])];
+      board[squareI].attackedBy[this.collor].splice(nameIndex, 1);
+
+      console.log(board[squareI].attackedBy[this.collor]);
+    });
+  }
 }

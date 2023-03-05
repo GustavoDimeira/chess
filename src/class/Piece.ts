@@ -7,7 +7,7 @@ export default abstract class Piece extends ChessPiece {
     protected position: string,
     public collor: 'w' | 'b',
     public icon: string,
-  ) { 
+  ) {
     super(name, position, collor, icon);
   };
 
@@ -55,7 +55,7 @@ export default abstract class Piece extends ChessPiece {
     ) {
       const index = (
         this.collun + (positionPlus * senseColl)) * 8 + (this.line + (positionPlus * senceLine)
-      );
+        );
       hasPeace = board[index].ocupatedBy;
       const collor = hasPeace?.collor;
 
@@ -65,7 +65,6 @@ export default abstract class Piece extends ChessPiece {
         avaliable.push(index);
       }
     };
-
     return avaliable;
   };
 
