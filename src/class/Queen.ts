@@ -5,10 +5,9 @@ export default class Queen extends Piece {
   constructor(
     public name: string,
     public position: string,
-    public collor: 'w' | 'b',
     public icon: string,
   ) {
-    super(name, position, collor, icon);
+    super(name, position, icon);
   }
 
   public getMoves(board: Square[]): number[] {
@@ -36,6 +35,7 @@ export default class Queen extends Piece {
 
     const result =  [...straight, ...diagonal];
 
+    console.log('a');
     this.attacking = result;
     return result;
   };

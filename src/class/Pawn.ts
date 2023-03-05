@@ -7,11 +7,10 @@ export default class Pawn extends ChessPiece {
   constructor(
     public name: string,
     public position: string,
-    public collor: 'w' | 'b',
     public icon: string,
     public attacking: number[] = [],
   ) {
-    super(name, position, collor, icon);
+    super(name, position, icon);
   }
 
   public getMoves (board: Square[]): number[] {

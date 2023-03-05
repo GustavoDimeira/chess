@@ -38,7 +38,7 @@ export default function Board() {
   const selectSqrHandler = (square: Square, indexTarget: number) => {
     if (squareSelected?.ocupatedBy?.collor === turne) {
       if (squareSelected.ocupatedBy.moveTo(tempBoard, indexTarget)) {
-        changeTurne('w');
+        changeTurne(turne === 'b' ? 'w' : 'b');
         checkCastle(
           squareSelected.position, indexTarget, board[indexTarget].ocupatedBy?.name as string
         );
@@ -58,19 +58,15 @@ export default function Board() {
     if (name.split('King').length > 1 && (crrIndex === 4 || crrIndex === 60)) {
       switch (next) {
         case 2:
-          tempBoard[0].ocupatedBy?.killPiece(tempBoard, 0);
           tempBoard[0].ocupatedBy?.moveTo(tempBoard, 3, true);
           break;
         case 6:
-          tempBoard[0].ocupatedBy?.killPiece(tempBoard, 0);
           tempBoard[7].ocupatedBy?.moveTo(tempBoard, 5, true);
           break;
         case 58:
-          tempBoard[0].ocupatedBy?.killPiece(tempBoard, 0);
           tempBoard[56].ocupatedBy?.moveTo(tempBoard, 59, true);
           break;
         default:
-          tempBoard[0].ocupatedBy?.killPiece(tempBoard, 0);
           tempBoard[63].ocupatedBy?.moveTo(tempBoard, 61, true);
           break;
       }

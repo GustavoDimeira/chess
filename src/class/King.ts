@@ -5,10 +5,9 @@ export default class King extends Piece {
   constructor(
     public name: string,
     protected position: string,
-    public collor: 'w' | 'b',
     public icon: string,
   ) {
-    super(name, position, collor, icon);
+    super(name, position, icon);
   }
 
   public getMoves(board: Square[]): number[] {

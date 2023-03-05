@@ -4,15 +4,20 @@ export default abstract class ChessPiece {
   constructor(
     public name: string,
     protected position: string,
-    public collor: 'w' | 'b',
     public icon: string,
+    public collor: 'w' | 'b' = 'w',
     public attacking: number[] = [],
     public isFirstMove: boolean = true,
     protected collun: number = -1,
     protected line: number = -1,
   ) {
+    if (name.split('_')[1] !== 'w' && name.split('_')[1] !=='b') {
+      throw new Error('Incorrect name format');
+    }
     this.collun = Number(this.position.split('x')[0]);
     this.line = Number(this.position.split('x')[1]);
+
+    this.collor = name.split('_')[1] as 'w' | 'b';
   };
   public abstract getMoves(board: Square[]): number[];
 
@@ -64,12 +69,11 @@ export default abstract class ChessPiece {
 
   protected resetAttacking(board: Square[]) {
     this.attacking.forEach((squareI) => {
+      board[squareI].attackedBy[this.collor] = [...new Set(board[squareI].attackedBy[this.collor])];
+
       const nameIndex = board[squareI].attackedBy[this.collor].findIndex((iN) => iN === this.name);
 
-      board[squareI].attackedBy[this.collor] = [...new Set(board[squareI].attackedBy[this.collor])];
       board[squareI].attackedBy[this.collor].splice(nameIndex, 1);
-
-      console.log(board[squareI].attackedBy[this.collor]);
     });
   }
 }
