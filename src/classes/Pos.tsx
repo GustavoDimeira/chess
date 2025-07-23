@@ -3,4 +3,8 @@ export default class Pos {
         readonly y: number,
         readonly x: number
     ) {}
+
+    public equals(other: Pos): boolean {
+        return this.x === other.x && this.y === other.y;
+    }
 }

@@ -21,14 +21,14 @@ export default abstract class Piece {
         return this._attakedTiles
     }
 
-    public getAvaliableMoves(board: Board): Board {
+    public getAvaliableMoves(board: Board): boolean {
         this._attakedTiles.forEach((tile) => tile.attakedBy.splice(tile.attakedBy.indexOf(this), 1));
 
         [this._avaliableMoves, this._attakedTiles] =  this.calculateMoves(board);
 
         this._attakedTiles.forEach((tile) => tile.attakedBy.push(this));
 
-        return board;
+        return true;
     }
 
     protected abstract calculateMoves(board: Board): [Tile[], Tile[]];
