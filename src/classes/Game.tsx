@@ -14,7 +14,10 @@ export default class Game {
         return this._turn;
     }
 
-    public addPiece(piece: Piece, position: Pos): boolean {
+    public addPiece(piece: Piece, position: Pos | null = null): boolean {
+        if (!position) position = piece.position;
+        else piece.position = position;
+
         const tile = this.board.getTile(position);
 
         if (!tile || tile.ocupatedBy) return false;
@@ -30,9 +33,9 @@ export default class Game {
         const prev_tile = this.board.getTile(piece.position);
 
         if (!tile_target) return false;
-        if (!prev_tile) throw new Error("incorrect board state"); // necessario para satisfazer a tipagem;
+        if (!prev_tile) throw new Error("incorrect board state"); // necessario para satisfazer a tipagem
 
-        if (tile_target.ocupatedBy) {
+        if (tile_target.ocupatedBy) { // remover a peça caso a casa destino esteja ocupada
             const targetPiece = tile_target.ocupatedBy
 
             targetPiece.attakedTiles.forEach((tile) => tile.attakedBy.splice(tile.attakedBy.indexOf(piece), 1));

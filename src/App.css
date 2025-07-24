@@ -1,0 +1,17 @@
+.line {
+    display: block;
+    padding: 0px;
+    margin: 0px;
+}
+
+.tile {
+    display: inline-block;
+
+    width: 80px;
+    height: 80px;
+
+    border: 2px black solid;
+
+    padding: 0px;
+    margin: 0px;
+}
