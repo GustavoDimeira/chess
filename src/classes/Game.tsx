@@ -20,31 +20,32 @@ export default class Game {
 
         const tile = this.board.getTile(position);
 
-        if (!tile || tile.ocupatedBy) return false;
+        if (!tile || tile.occupiedBy) return false;
 
-        tile.ocupatedBy = piece;
+        tile.occupiedBy = piece;
         this.pieceList.push(piece);
 
         return true;
     }
 
     public movePiece(piece: Piece, destination: Pos): boolean {
-        const tile_target = piece.avaliableMoves.find((tile) => tile.position.equals(destination))
-        const prev_tile = this.board.getTile(piece.position);
+        const tile_target = piece.avaliableMoves.find((tile) => tile.position.equals(destination));
+        const prev_tile = this.board.tiles[piece.position.y][piece.position.x]; // getTile(piece.position);
 
         if (!tile_target) return false;
-        if (!prev_tile) throw new Error("incorrect board state"); // necessario para satisfazer a tipagem
+        // if (!prev_tile) throw new Error("incorrect board state"); // necessario para satisfazer a tipagem
 
-        if (tile_target.ocupatedBy) { // remover a peça caso a casa destino esteja ocupada
-            const targetPiece = tile_target.ocupatedBy
+        if (tile_target.occupiedBy) { // remover a peça caso a casa destino esteja ocupada
+            const targetPiece = tile_target.occupiedBy;
 
             targetPiece.attakedTiles.forEach((tile) => tile.attakedBy.splice(tile.attakedBy.indexOf(piece), 1));
-            this.pieceList.splice(this.pieceList.indexOf(targetPiece), 1)
+            this.pieceList.splice(this.pieceList.indexOf(targetPiece), 1);
         }
 
-        tile_target.ocupatedBy = piece;
-        prev_tile.ocupatedBy = null
+        tile_target.occupiedBy = piece;
+        prev_tile.occupiedBy = null
         piece.position = destination;
+        piece.isFirstMove = false;
 
         // recalcular somente o movimento das peças possivelmente afetadas pela ultima movimentação
         prev_tile.attakedBy.forEach((piece) => piece.getAvaliableMoves(this.board));

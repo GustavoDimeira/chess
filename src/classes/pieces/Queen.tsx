@@ -23,14 +23,14 @@ export default class Queen extends Piece {
             const crrTile = board.tiles[y][crr_x];
 
             if (crr_x == x) continue;
-            if (crrTile.ocupatedBy) {
+            if (crrTile.occupiedBy) {
                 if (crr_x > x) { // encerrar
                     attackTiles.push(crrTile)
-                    if (crrTile.ocupatedBy.color != this.color) avaliableTiles.push(crrTile);
+                    if (crrTile.occupiedBy.color != this.color) avaliableTiles.push(crrTile);
                     crr_x = board.size // para parar
                 } else { // resetar
                     attackTiles = [crrTile];
-                    if (crrTile.ocupatedBy.color != this.color) avaliableTiles = [crrTile];
+                    if (crrTile.occupiedBy.color != this.color) avaliableTiles = [crrTile];
                 }
             } else {
                 avaliableTiles.push(crrTile);
@@ -43,14 +43,14 @@ export default class Queen extends Piece {
             const crrTile = board.tiles[crr_y][x];
 
             if (crr_y == y) continue;
-            if (crrTile.ocupatedBy) {
+            if (crrTile.occupiedBy) {
                 if (crr_y > y) { // encerrar
                     attackTiles.push(crrTile)
-                    if (crrTile.ocupatedBy.color != this.color) avaliableTiles.push(crrTile);
+                    if (crrTile.occupiedBy.color != this.color) avaliableTiles.push(crrTile);
                     crr_y = board.size // para parar
                 } else { // resetar
                     attackTiles = [crrTile];
-                    if (crrTile.ocupatedBy.color != this.color) avaliableTiles = [crrTile];
+                    if (crrTile.occupiedBy.color != this.color) avaliableTiles = [crrTile];
                 }
             } else {
                 avaliableTiles.push(crrTile);
@@ -84,8 +84,8 @@ export default class Queen extends Piece {
 
             if (crrTile.position.equals(this.position)) continue;
 
-            if (crrTile.ocupatedBy) {
-                if (crrTile.ocupatedBy.color !== this.color) {
+            if (crrTile.occupiedBy) {
+                if (crrTile.occupiedBy.color !== this.color) {
                     avaliableTiles.push(crrTile);
                 }
                 attackTiles.push(crrTile);

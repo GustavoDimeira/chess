@@ -44,8 +44,8 @@ export default class Bishop extends Piece {
 
             if (crrTile.position.equals(this.position)) continue;
 
-            if (crrTile.ocupatedBy) {
-                if (crrTile.ocupatedBy.color !== this.color) {
+            if (crrTile.occupiedBy) {
+                if (crrTile.occupiedBy.color !== this.color) {
                     avaliableTiles.push(crrTile);
                 }
                 attackTiles.push(crrTile);

@@ -1,12 +1,16 @@
 import Piece from "./Piece";
 import Pos from "./Pos";
 
-export default class Tile {
-    public ocupatedBy: Piece | null = null;
+export default class Tile { 
+    public occupiedBy: Piece | null = null;
 	public attakedBy: Piece[] = [];
 	// public sightBy: Pawn[] = [];
 
     constructor(
         readonly position: Pos
     ) {}
+
+    public attackedByEnemies(color: boolean) {
+        return !!this.attakedBy.find(piece => piece.color !== color)
+    }
  }
