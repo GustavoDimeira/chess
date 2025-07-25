@@ -14,11 +14,11 @@ export default abstract class Piece {
     ) {}
 
     get avaliableMoves(): Tile[] {
-        return this._avaliableMoves
+        return this._avaliableMoves;
     }
 
     get attakedTiles(): Tile[] {
-        return this._attakedTiles
+        return this._attakedTiles;
     }
 
     public getAvaliableMoves(board: Board): boolean {

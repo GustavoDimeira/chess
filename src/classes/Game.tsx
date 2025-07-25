@@ -47,11 +47,7 @@ export default class Game {
         piece.position = destination;
         piece.isFirstMove = false;
 
-        // recalcular somente o movimento das peças possivelmente afetadas pela ultima movimentação
-        prev_tile.attakedBy.forEach((piece) => piece.getAvaliableMoves(this.board));
-        // prev_tile.sightBy.forEach((piece) => piece.getAvaliableMoves(this.board));
-        tile_target.attakedBy.forEach((piece) => piece.getAvaliableMoves(this.board));
-        // tile_target.sightBy.forEach((piece) => piece.getAvaliableMoves(this.board));
+        this.pieceList.forEach((piece) => piece.getAvaliableMoves(this.board));
 
         this._turn = !this._turn;
 
