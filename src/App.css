@@ -2,6 +2,8 @@
     display: block;
     padding: 0px;
     margin: 0px;
+
+    user-select: none;
 }
 
 .tile {
@@ -16,4 +18,8 @@
     margin: 0px;
 
     font-size: xx-large;
+}
+
+.highLighted {
+    background-color: red;
 }

@@ -14,10 +14,12 @@ export default ({ piece, tile, selectedPiece, updateSelected }: PieceProps) => {
 
     const handleDrag = () => {
         updateDragging(true);
+        updateSelected(piece);
     }
 
     const handleDrop = () => {
         updateDragging(false);
+        updateSelected(null);
     }
 
     return <div

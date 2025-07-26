@@ -23,7 +23,7 @@ export default class King extends Piece {
 
         values.forEach(x => values.forEach(y => {
             if (x || y) { // x 0 and y 0 = king tile
-                const tile = board.getTile(new Pos(king_x + x, king_y + y));
+                const tile = board.getTile(new Pos(king_y + y, king_x + x));
 
                 if (tile) {
                     if (!tile.attackedByEnemies(this.color) && !(tile.occupiedBy?.color == this.color)) {

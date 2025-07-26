@@ -10,10 +10,24 @@ function App() {
   const [board, updateBoard] = useState(game.board.tiles);
   const [selectedPiece, updateSelected] = useState<Piece | null>(null);
 
+  useEffect(() => {
+    game.board.tiles.forEach(line => line.forEach(tile => tile.highLighted = false));
+
+    selectedPiece?.avaliableMoves.forEach(tile => tile.highLighted = true);
+
+    updateBoard([...game.board.tiles]);
+  }, [selectedPiece]);
+
   const handleTileClick = (tile: Tile) => {
     if (selectedPiece) {
-      game.movePiece(selectedPiece, tile.position);
-      updateSelected(null);
+      const hasMoved = game.movePiece(selectedPiece, tile.position);
+
+      if (hasMoved) {
+        updateSelected(null);
+      } else {
+        updateSelected(tile.occupiedBy);
+      }
+      
       updateBoard([...game.board.tiles]);
 
       return;
@@ -30,8 +44,14 @@ function App() {
             {line.map((tile, tileIndex) => (
               <div
                 key={tileIndex}
-                className="tile"
+                className={`tile ${tile.highLighted ? "highLighted" : ""}`}
                 onClick={() => handleTileClick(tile)}
+                onDragOver={(event) => {
+                  event.preventDefault();
+                }}
+                onDrop={() => {
+                  handleTileClick(tile);
+                }}
               >
                 {
                   tile.occupiedBy ? 

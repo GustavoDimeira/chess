@@ -3,6 +3,7 @@ import Pos from "./Pos";
 import Tile from "./Tile";
 
 export default abstract class Piece {
+    readonly ID: string = Math.random() + "";
     public isFirstMove: boolean = true;
     protected _icon: string = '';
 
