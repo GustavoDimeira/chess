@@ -9,6 +9,8 @@ export default class King extends Piece {
        readonly color: boolean 
     ) {
         super(position, color);
+
+        this._icon = this.color ? "♔" : "♚";
     }
 
     protected calculateMoves(board: Board): [Tile[], Tile[]] {

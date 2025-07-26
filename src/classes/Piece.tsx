@@ -4,6 +4,7 @@ import Tile from "./Tile";
 
 export default abstract class Piece {
     public isFirstMove: boolean = true;
+    protected _icon: string = '';
 
     private _avaliableMoves: Tile[] = [];
     private _attakedTiles: Tile[] = [];
@@ -19,6 +20,10 @@ export default abstract class Piece {
 
     get attakedTiles(): Tile[] {
         return this._attakedTiles;
+    }
+
+    get icon(): string {
+        return this._icon;
     }
 
     public getAvaliableMoves(board: Board): boolean {

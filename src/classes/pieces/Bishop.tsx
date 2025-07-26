@@ -9,6 +9,8 @@ export default class Bishop extends Piece {
         readonly color: boolean,
     ) {
         super(position, color);
+
+        this._icon = this.color ? "♗" : "♝";
     };
 
     protected calculateMoves(board: Board): [Tile[], Tile[]] {
@@ -42,8 +44,6 @@ export default class Bishop extends Piece {
             const crrTile = board.getTile(new Pos(newY, newX));
             if (!crrTile) break;
 
-            if (crrTile.position.equals(this.position)) continue;
-
             if (crrTile.occupiedBy) {
                 if (crrTile.occupiedBy.color !== this.color) {
                     avaliableTiles.push(crrTile);
@@ -56,5 +56,4 @@ export default class Bishop extends Piece {
             attackTiles.push(crrTile);
         }
     }
-
 }

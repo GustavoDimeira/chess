@@ -9,6 +9,8 @@ export default class Knight extends Piece {
         readonly color: boolean,
     ) {
         super(position, color);
+
+        this._icon = this.color ? "♘" : "♞";
     }
 
     protected calculateMoves(board: Board): [Tile[], Tile[]] {
@@ -32,14 +34,9 @@ export default class Knight extends Piece {
             const crrTile = board.getTile(new Pos(newY, newX));
             if (!crrTile) continue;
 
-            if (crrTile.occupiedBy) {
-                attackTiles.push(crrTile);
-                if (crrTile.occupiedBy.color !== this.color) {
-                    avaliableTiles.push(crrTile);
-                }
-            } else {
+            attackTiles.push(crrTile);
+            if (!crrTile.occupiedBy || crrTile.occupiedBy.color !== this.color) {
                 avaliableTiles.push(crrTile);
-                attackTiles.push(crrTile);
             }
         }
 

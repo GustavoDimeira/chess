@@ -1,6 +1,7 @@
 import Board from "./Board";
 import Piece from "./Piece";
 import Pos from "./Pos";
+import Tile from "./Tile";
 
 export default class Game {
     readonly pieceList: Piece[] = [];
@@ -28,7 +29,7 @@ export default class Game {
         return true;
     }
 
-    public movePiece(piece: Piece, destination: Pos): boolean {
+    public movePiece(piece: Piece, destination: Pos): boolean {       
         const tile_target = piece.avaliableMoves.find((tile) => tile.position.equals(destination));
         const prev_tile = this.board.tiles[piece.position.y][piece.position.x]; // getTile(piece.position);
 

@@ -13,6 +13,7 @@ export default class Pawn extends Piece {
         super(position, color);
 
         this.direction = this.color ? -1 : 1;
+        this._icon = this.color ? "♙" : "♟︎";
     }
 
     protected calculateMoves(board: Board): [Tile[], Tile[]] {
@@ -26,14 +27,14 @@ export default class Pawn extends Piece {
 
         if (attack1) {
             attackTiles.push(attack1);
-            if (!attack1.occupiedBy || attack1.occupiedBy.color !== this.color) {
+            if (attack1.occupiedBy && attack1.occupiedBy.color !== this.color) {
                 avaliableTiles.push(attack1);
             }
         }
 
         if (attack2) {
             attackTiles.push(attack2);
-            if (!attack2.occupiedBy || attack2.occupiedBy.color !== this.color) {
+            if (attack2.occupiedBy && attack2.occupiedBy.color !== this.color) {
                 avaliableTiles.push(attack2);
             }
         }
@@ -44,7 +45,7 @@ export default class Pawn extends Piece {
         if (move1 && !move1.occupiedBy) {
             avaliableTiles.push(move1);
 
-            if (move2 && !move2?.attakedBy && this.isFirstMove) {
+            if (move2 && !move2.occupiedBy && this.isFirstMove) {
                 avaliableTiles.push(move2);
             }
         }

@@ -1,0 +1,30 @@
+import { Dispatch, SetStateAction, useState } from "react";
+import Piece from "../classes/Piece";
+import Tile from "../classes/Tile";
+
+type PieceProps = {
+  piece: Piece;
+  tile: Tile;
+  selectedPiece: Piece | null;
+  updateSelected: Dispatch<SetStateAction<Piece | null>>;
+};
+
+export default ({ piece, tile, selectedPiece, updateSelected }: PieceProps) => {
+    const [dragging, updateDragging] = useState(false);
+
+    const handleDrag = () => {
+        updateDragging(true);
+    }
+
+    const handleDrop = () => {
+        updateDragging(false);
+    }
+
+    return <div
+        draggable
+        onDrag={ handleDrag }
+        onDragEnd={ handleDrop }
+    >
+        { dragging ? "" : piece.icon }
+    </div>
+}
