@@ -37,5 +37,39 @@ export default abstract class Piece {
         return true;
     }
 
+    protected getDirectionalMoves(
+        board: Board,
+        startPos: Pos,
+        color: boolean,
+        directions: [number, number][],
+        attackTiles: Tile[] ,
+        avaliableTiles: Tile[] 
+    ): void {
+        for (const [dy, dx] of directions) {
+            let step = 1;
+
+            while (true) {
+                const newY = startPos.y + dy * step;
+                const newX = startPos.x + dx * step;
+                const tile = board.getTile(new Pos(newY, newX));
+
+                if (!tile) break;
+
+                attackTiles.push(tile);
+
+                if (tile.occupiedBy) {
+                    if (tile.occupiedBy.color !== color) {
+                        avaliableTiles.push(tile);
+                    }
+                    break;
+                } else {
+                    avaliableTiles.push(tile);
+                }
+
+                step++;
+            }
+        }
+    }
+
     protected abstract calculateMoves(board: Board): [Tile[], Tile[]];
 }

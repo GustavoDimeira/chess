@@ -60,7 +60,7 @@ function App() {
                     tile={ tile }
                     selectedPiece={ selectedPiece }
                     updateSelected={ updateSelected }
-                  /> : "."
+                  /> : `${tile.position.x} - ${tile.position.y}`
                 }
               </div>
             ))}
