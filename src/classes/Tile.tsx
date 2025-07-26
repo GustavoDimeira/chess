@@ -10,7 +10,7 @@ export default class Tile {
         readonly position: Pos,
     ) {}
 
-    public attackedByEnemies(color: boolean) {
-        return !!this.attakedBy.find(piece => piece.color !== color);
+    public attackedByEnemies(color: boolean): Piece[] {
+        return this.attakedBy.filter(piece => piece.color !== color);
     }
  }

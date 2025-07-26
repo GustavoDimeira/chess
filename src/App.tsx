@@ -1,74 +1,13 @@
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
-import PieceComponent from './components/PieceComponent';
-
-import game from './iniciateGame';
-import Tile from './classes/Tile';
-import Piece from './classes/Piece';
+import BoardComponent from './components/BoardComponent';
+import SideInfos from './components/SideInfos';
 
 function App() {
-  const [board, updateBoard] = useState(game.board.tiles);
-  const [selectedPiece, updateSelected] = useState<Piece | null>(null);
-
-  useEffect(() => {
-    game.board.tiles.forEach(line => line.forEach(tile => tile.highLighted = false));
-
-    selectedPiece?.avaliableMoves.forEach(tile => tile.highLighted = true);
-
-    updateBoard([...game.board.tiles]);
-  }, [selectedPiece]);
-
-  const handleTileClick = (tile: Tile) => {
-    if (selectedPiece) {
-      const hasMoved = game.movePiece(selectedPiece, tile.position);
-
-      if (hasMoved) {
-        updateSelected(null);
-      } else {
-        updateSelected(tile.occupiedBy);
-      }
-      
-      updateBoard([...game.board.tiles]);
-
-      return;
-    }
-
-    updateSelected(tile.occupiedBy);
-  };
-
-  return (
-    <div className="App">
-      {
-        board.map((line, lineIndex) => (
-          <div key={lineIndex} className="line">
-            {line.map((tile, tileIndex) => (
-              <div
-                key={tileIndex}
-                className={`tile ${tile.highLighted ? "highLighted" : ""}`}
-                onClick={() => handleTileClick(tile)}
-                onDragOver={(event) => {
-                  event.preventDefault();
-                }}
-                onDrop={() => {
-                  handleTileClick(tile);
-                }}
-              >
-                {
-                  tile.occupiedBy ? 
-                  <PieceComponent
-                    piece={ tile.occupiedBy }
-                    tile={ tile }
-                    selectedPiece={ selectedPiece }
-                    updateSelected={ updateSelected }
-                  /> : `${tile.position.x} - ${tile.position.y}`
-                }
-              </div>
-            ))}
-          </div>
-        ))
-      }
-    </div>
-  );
+  return <div className="App">
+    <BoardComponent />
+    <SideInfos />
+  </div>
 }
 
 export default App;

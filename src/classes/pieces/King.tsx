@@ -26,7 +26,7 @@ export default class King extends Piece {
                 const tile = board.getTile(new Pos(king_y + y, king_x + x));
 
                 if (tile) {
-                    if (!tile.attackedByEnemies(this.color) && !(tile.occupiedBy?.color == this.color)) {
+                    if (tile.attackedByEnemies(this.color).length === 0 && (tile.occupiedBy?.color != this.color)) {
                         avaliableTiles.push(tile);
                     }
                     attackTiles.push(tile);

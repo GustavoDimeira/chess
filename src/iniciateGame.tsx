@@ -9,7 +9,7 @@ import Pawn from "./classes/pieces/Pawn";
 import Pos from "./classes/Pos";
 
 const board = new Board(8);
-const game = new Game(board);
+const game = new Game(board, [10, 10], true);
 
 [
     // black

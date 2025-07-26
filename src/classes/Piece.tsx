@@ -19,6 +19,10 @@ export default abstract class Piece {
         return this._avaliableMoves;
     }
 
+    set avaliableMoves(tiles: Tile[]) {
+        this._avaliableMoves = tiles;
+    }
+
     get attakedTiles(): Tile[] {
         return this._attakedTiles;
     }

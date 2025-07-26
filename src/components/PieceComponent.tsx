@@ -3,13 +3,11 @@ import Piece from "../classes/Piece";
 import Tile from "../classes/Tile";
 
 type PieceProps = {
-  piece: Piece;
-  tile: Tile;
-  selectedPiece: Piece | null;
-  updateSelected: Dispatch<SetStateAction<Piece | null>>;
+    piece: Piece;
+    updateSelected: Dispatch<SetStateAction<Piece | null>>;
 };
 
-export default ({ piece, tile, selectedPiece, updateSelected }: PieceProps) => {
+export default ({ piece, updateSelected }: PieceProps) => {
     const [dragging, updateDragging] = useState(false);
 
     const handleDrag = () => {
@@ -24,9 +22,9 @@ export default ({ piece, tile, selectedPiece, updateSelected }: PieceProps) => {
 
     return <div
         draggable
-        onDrag={ handleDrag }
-        onDragEnd={ handleDrop }
+        onDrag={handleDrag}
+        onDragEnd={handleDrop}
     >
-        { dragging ? "" : piece.icon }
+        {dragging ? "" : piece.icon}
     </div>
 }
