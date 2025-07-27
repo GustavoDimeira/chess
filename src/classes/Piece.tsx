@@ -12,7 +12,8 @@ export default abstract class Piece {
     private _attakedTiles: Tile[] = [];
 
     public pinned: boolean = false;
-    public options: Tile[] = [];
+    public pinnedOptions: Tile[] = [];
+    public blockeableTiles: Tile[] = [];
     
     constructor(
         public position: Pos,
@@ -36,6 +37,7 @@ export default abstract class Piece {
     }
 
     public getAvaliableMoves(board: Board): boolean {
+        this.blockeableTiles = [];
         this._attakedTiles.forEach((tile) => tile.attakedBy.splice(tile.attakedBy.indexOf(this), 1));
 
         [this._avaliableMoves, this._attakedTiles] =  this.calculateMoves(board);
@@ -58,7 +60,7 @@ export default abstract class Piece {
             const newAttackedDirection: Tile[] = [];
             const newAvaliableDirection: Tile[] = [];
             let firstPiece: Piece | null = null;
-            const blockeableTiles: Tile[] = [board.getTile(this.position) as Tile];
+            const inLineTiles: Tile[] = [board.getTile(this)];
 
             while (true) {
                 const newY = startPos.y + dy * step;
@@ -78,10 +80,11 @@ export default abstract class Piece {
                             if (firstPiece) {
                                 // A peça entre o rei e essa está pinada
                                 firstPiece.pinned = true;
-                                firstPiece.options = blockeableTiles;
-                                console.log(blockeableTiles);
+                                firstPiece.pinnedOptions = inLineTiles;
+                                console.log(inLineTiles);
                             } else {
-                                // Rei está logo após a peça, adiciona tile seguinte
+                                this.blockeableTiles = newAvaliableDirection; 
+
                                 step++;
                                 const nextY = startPos.y + dy * step;
                                 const nextX = startPos.x + dx * step;
@@ -104,7 +107,7 @@ export default abstract class Piece {
                     if (!firstPiece) {
                         newAvaliableDirection.push(tile);
                     }
-                    blockeableTiles.push(tile);
+                    inLineTiles.push(tile);
                 }
 
                 step++;

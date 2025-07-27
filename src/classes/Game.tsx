@@ -82,40 +82,33 @@ export default class Game {
         kings.forEach((king) => {
             const color = king.color;
 
-            const kingTile = this.board.getTile(king.position) as Tile;
+            const kingTile = this.board.getTile(king);
             const attackers = kingTile.attackedByEnemies(color);
 
             if (attackers.length >= 1) {
                 this.pieceList.forEach((p) => {
                     if (p.color !== color || p instanceof King) return;
 
-                    // Se só tem 1 atacante, deixa as peças que podem capturá-lo ou bloquer se mover
+                    // valida se a peça é capaz de bloquear ou captrar o atacante, caso tenho apenas 1
                     if (attackers.length === 1) {
                         const attacker = attackers[0];
-                        const canCapture = p.avaliableMoves.some((t) =>
-                            t.position.equals(attacker.position)
-                        );
-                        const canBlock = false; // # todo
-                        if (canCapture) {
-                            p.avaliableMoves = [this.board.getTile(attacker.position) as Tile];
-                        } else if (canBlock)
-                            p.avaliableMoves = [] // # todo
-                        else {
-                            p.avaliableMoves = [];
-                        }
+
+                        p.avaliableMoves = p.avaliableMoves.filter((tile) => { 
+                            return (attacker.blockeableTiles.includes(tile) || tile.position.equals(attacker.position));
+                        })
                     } else {
                        p.avaliableMoves = [];
                     }
                 });
-            } else { // buscar pelas peças pinadas
+            } else { // buscar pelas peças pinadas, apenas caso não tenha atacantes
                 this.pieceList.forEach((piece) => {
                     if (piece.color === color) {
                         if (piece.pinned) {
-                            piece.avaliableMoves = piece.avaliableMoves.filter(tile => piece.options.includes(tile))
+                            piece.avaliableMoves = piece.avaliableMoves.filter(tile => piece.pinnedOptions.includes(tile))
                         }
 
                         piece.pinned = false;
-                        piece.options = [];
+                        piece.pinnedOptions = [];
                     }
                 });
             }
