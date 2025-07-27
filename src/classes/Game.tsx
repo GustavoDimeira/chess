@@ -1,7 +1,10 @@
 import Board from "./Board";
 import Piece from "./Piece";
+import Bishop from "./pieces/Bishop";
 import King from "./pieces/King";
+import Knight from "./pieces/Knight";
 import Pawn from "./pieces/Pawn";
+import Queen from "./pieces/Queen";
 import Rook from "./pieces/Rook";
 import Pos from "./Pos";
 import Tile from "./Tile";
@@ -48,7 +51,10 @@ export default class Game {
         return true;
     }
 
-    private removePiece(tile_target: Tile): boolean {
+    private removePiece(arg: Tile | Piece): boolean {
+        const tile_target = arg instanceof Tile ? arg : this.board.getTile(arg);
+
+
         if (!tile_target.occupiedBy) return false;
         const targetPiece = tile_target.occupiedBy;
 
@@ -90,7 +96,7 @@ export default class Game {
         }
     }
 
-    private validateEnPassant(piece: Pawn, destination: Pos) {
+    private validateEnPassant(piece: Pawn, destination: Pos): void {
         const dy = piece.position.y - destination.y;
 
         // Caso o peão tenha avançado 2 casas (possibilita en passant)
@@ -120,7 +126,7 @@ export default class Game {
         }
     }
 
-    private validateCheck(kings: Piece[]) {
+    private validateCheck(kings: Piece[]): void {
         kings.forEach((king) => {
             const color = king.color;
 
@@ -190,8 +196,9 @@ export default class Game {
         if (tile_target.occupiedBy) this.removePiece(tile_target);
 
         if (piece instanceof King) this.validateCastle(piece, destination);
-        if (piece instanceof Pawn) this.validateEnPassant(piece, destination);
-        else {
+        if (piece instanceof Pawn) {
+            this.validateEnPassant(piece, destination);
+        } else {
             this.board.enPassantTile = null;
         }
 

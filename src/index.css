@@ -1,13 +1,65 @@
+/* General Body Styles */
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #f0f0f0; /* Light gray background */
 }
 
+/* Code Block Styles */
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: 'Courier New', monospace;
+}
+
+/* Main Application Container */
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Board Container */
+.board-container {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  width: 640px; /* 8 tiles * 80px/tile */
+  height: 640px; /* 8 tiles * 80px/tile */
+  border: 5px solid #8B4513; /* Wooden border */
+}
+
+/* Tile Styles */
+.tile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50px;
+  user-select: none;
+}
+
+/* Light and Dark Tile Colors */
+.tile.light {
+  background-color: #F0D9B5;
+}
+
+.tile.dark {
+  background-color: #B58863;
+}
+
+/* Highlighted Tile for Possible Moves */
+.tile.highlighted {
+  background-color: rgba(255, 0, 0, 0.5);
+}
+
+/* Piece Styles */
+.piece {
+  cursor: grab;
+  text-align: center;
+  line-height: 80px; /* Adjust based on tile size */
+}
+
+.piece.dragging {
+  opacity: 0.5;
 }

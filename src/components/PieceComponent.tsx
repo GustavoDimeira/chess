@@ -9,21 +9,21 @@ type PieceProps = {
 export default ({ piece, updateSelected }: PieceProps) => {
     const [dragging, updateDragging] = useState(false);
 
-    const handleDrag = () => {
+    const handleDragStart = () => {
         updateDragging(true);
         updateSelected(piece);
     }
 
-    const handleDrop = () => {
+    const handleDragEnd = () => {
         updateDragging(false);
-        updateSelected(null);
     }
 
     return <div
+        className={`piece ${dragging ? 'dragging' : ''}`}
         draggable
-        onDrag={handleDrag}
-        onDragEnd={handleDrop}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
     >
-        {dragging ? `${piece.position.y} - ${piece.position.x}` : piece.icon}
+        {piece.icon}
     </div>
 }

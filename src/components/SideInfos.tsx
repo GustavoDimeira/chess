@@ -1,11 +1,17 @@
 export default () => {
     return (
         <div id="sideInfos">
-            <div>Timer 1</div>
-            <div>Timer 2</div>
-            <div>Sequencia de lances</div>
-            <div>pontuação</div>
-            <div>opções (desistir, empate)</div>
+            <div className="timers">
+                <div className="timer">10:00</div>
+                <div className="timer">10:00</div>
+            </div>
+            <div className="moves-history">
+                {/* Moves will be added here */}
+            </div>
+            <div className="actions">
+                <button>Resign</button>
+                <button>Offer Draw</button>
+            </div>
         </div>
     )
 }
