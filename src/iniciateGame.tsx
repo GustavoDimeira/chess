@@ -13,40 +13,11 @@ const game = new Game(board, [10, 10], true);
 
 [
     // black
-    new Pawn(new Pos(1, 0), false),
-    new Pawn(new Pos(1, 1), false),
-    new Pawn(new Pos(1, 2), false),
-    new Pawn(new Pos(1, 3), false),
-    new Pawn(new Pos(1, 4), false),
-    new Pawn(new Pos(1, 5), false),
-    new Pawn(new Pos(1, 6), false),
-    new Pawn(new Pos(1, 7), false),
-    new Rook(new Pos(0, 0), false),
-    new Knight(new Pos(0, 1), false),
-    new Bishop(new Pos(0, 2), false),
-    new Queen(new Pos(0, 3), false),
-    new King(new Pos(0, 4), false),
-    new Bishop(new Pos(0, 5), false),
-    new Knight(new Pos(0, 6), false),
-    new Rook(new Pos(0, 7), false),
+    new Rook(new Pos(2, 4), false),
 
     // white
-    new Pawn(new Pos(6, 0), true),
-    new Pawn(new Pos(6, 1), true),
-    new Pawn(new Pos(6, 2), true),
-    new Pawn(new Pos(6, 3), true),
-    new Pawn(new Pos(6, 4), true),
-    new Pawn(new Pos(6, 5), true),
-    new Pawn(new Pos(6, 6), true),
-    new Pawn(new Pos(6, 7), true),
-    new Rook(new Pos(7, 0), true),
-    new Knight(new Pos(7, 1), true),
-    new Bishop(new Pos(7, 2), true),
-    new Queen(new Pos(7, 3), true),
-    new King(new Pos(7, 4), true),
-    new Bishop(new Pos(7, 5), true),
-    new Knight(new Pos(7, 6), true),
-    new Rook(new Pos(7, 7), true)
+    new Rook(new Pos(4, 4), true),
+    new King(new Pos(6, 4), true),
 ].forEach((piece) => game.addPiece(piece));
 
 game.pieceList.forEach((piece) => piece.getAvaliableMoves(game.board));

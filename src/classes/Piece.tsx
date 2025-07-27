@@ -1,4 +1,5 @@
 import Board from "./Board";
+import King from "./pieces/King";
 import Pos from "./Pos";
 import Tile from "./Tile";
 
@@ -9,6 +10,9 @@ export default abstract class Piece {
 
     private _avaliableMoves: Tile[] = [];
     private _attakedTiles: Tile[] = [];
+
+    public pinned: boolean = false;
+    public options: Tile[] = [];
     
     constructor(
         public position: Pos,
@@ -46,32 +50,68 @@ export default abstract class Piece {
         startPos: Pos,
         color: boolean,
         directions: [number, number][],
-        attackTiles: Tile[] ,
-        avaliableTiles: Tile[] 
+        attackTiles: Tile[],
+        avaliableTiles: Tile[]
     ): void {
         for (const [dy, dx] of directions) {
             let step = 1;
+            const newAttackedDirection: Tile[] = [];
+            const newAvaliableDirection: Tile[] = [];
+            let firstPiece: Piece | null = null;
+            const blockeableTiles: Tile[] = [board.getTile(this.position) as Tile];
 
             while (true) {
                 const newY = startPos.y + dy * step;
                 const newX = startPos.x + dx * step;
                 const tile = board.getTile(new Pos(newY, newX));
-
                 if (!tile) break;
 
-                attackTiles.push(tile);
+                if (!firstPiece) newAttackedDirection.push(tile);
 
                 if (tile.occupiedBy) {
-                    if (tile.occupiedBy.color !== color) {
-                        avaliableTiles.push(tile);
+                    const targetPiece = tile.occupiedBy;
+
+                    if (targetPiece.color !== color) {
+                        if (!firstPiece) newAvaliableDirection.push(tile);
+
+                        if (targetPiece instanceof King) {
+                            if (firstPiece) {
+                                // A peça entre o rei e essa está pinada
+                                firstPiece.pinned = true;
+                                firstPiece.options = blockeableTiles;
+                                console.log(blockeableTiles);
+                            } else {
+                                // Rei está logo após a peça, adiciona tile seguinte
+                                step++;
+                                const nextY = startPos.y + dy * step;
+                                const nextX = startPos.x + dx * step;
+                                const nextTile = board.getTile(new Pos(nextY, nextX));
+                                if (nextTile) newAttackedDirection.push(nextTile);
+                            }
+                            break;
+                        }
+
+                        if (!firstPiece) {
+                            firstPiece = targetPiece;
+                            step++;
+                            continue;
+                        }
                     }
+
+                    // Peça aliada ou já tem uma peça no caminho
                     break;
                 } else {
-                    avaliableTiles.push(tile);
+                    if (!firstPiece) {
+                        newAvaliableDirection.push(tile);
+                    }
+                    blockeableTiles.push(tile);
                 }
 
                 step++;
             }
+
+            attackTiles.push(...newAttackedDirection);
+            avaliableTiles.push(...newAvaliableDirection);
         }
     }
 

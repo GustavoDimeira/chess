@@ -14,9 +14,6 @@ export default class Bishop extends Piece {
     };
 
     protected calculateMoves(board: Board): [Tile[], Tile[]] {
-        const y = this.position.y;
-        const x = this.position.x;
-
         const attackTiles: Tile[] = [];
         const avaliableTiles: Tile[] = [];
 

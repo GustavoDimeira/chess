@@ -57,7 +57,7 @@ export default () => {
                                         <PieceComponent
                                             piece={tile.occupiedBy}
                                             updateSelected={updateSelected}
-                                        /> : `${tile.position.x} - ${tile.position.y}`
+                                        /> : `${tile.position.y} - ${tile.position.x}`
                                 }
                             </div>
                         ))}

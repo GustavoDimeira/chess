@@ -57,7 +57,7 @@ export default class Game {
 
         if (!tile_target) return false;
 
-        if (tile_target.occupiedBy) {
+        if (tile_target.occupiedBy) { // matar a peça ocupante
             const targetPiece = tile_target.occupiedBy;
 
             targetPiece.attakedTiles.forEach((tile) => {
@@ -79,14 +79,10 @@ export default class Game {
         const kings = this.pieceList.filter((p) => p instanceof King);
         kings.forEach((king) => king.getAvaliableMoves(this.board));
 
-        // Para ambos os times (false = um time, true = outro)
-        [false, true].forEach((color) => {
-            const king = kings.find((k) => k.color === color);
-            if (!king) return;
+        kings.forEach((king) => {
+            const color = king.color;
 
-            const kingTile = this.board.getTile(king.position);
-            if (!kingTile) return;
-
+            const kingTile = this.board.getTile(king.position) as Tile;
             const attackers = kingTile.attackedByEnemies(color);
 
             if (attackers.length >= 1) {
@@ -109,6 +105,17 @@ export default class Game {
                         }
                     } else {
                        p.avaliableMoves = [];
+                    }
+                });
+            } else { // buscar pelas peças pinadas
+                this.pieceList.forEach((piece) => {
+                    if (piece.color === color) {
+                        if (piece.pinned) {
+                            piece.avaliableMoves = piece.avaliableMoves.filter(tile => piece.options.includes(tile))
+                        }
+
+                        piece.pinned = false;
+                        piece.options = [];
                     }
                 });
             }

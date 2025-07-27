@@ -14,12 +14,8 @@ export default class Queen extends Piece {
     };
 
     protected calculateMoves(board: Board): [Tile[], Tile[]] {
-        const y = this.position.y;
-        const x = this.position.x
-
-        // pegar linha
-        let attackTiles: Tile[] = [];
-        let avaliableTiles: Tile[] = [];
+        const attackTiles: Tile[] = [];
+        const avaliableTiles: Tile[] = [];
 
         const directions: [number, number][] = [
             [+1, +0],
