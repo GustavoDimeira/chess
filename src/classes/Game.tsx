@@ -2,22 +2,16 @@ import Board from "./Board";
 import Piece from "./Piece";
 import King from "./pieces/King";
 import Pos from "./Pos";
-import Tile from "./Tile";
 
-/**
- * Possíveis estados do jogo:
- * - `"r"`: rodando (running)
- * - `"t"`: empate (tie)
- * - `"w"`: vitória (win)
- * - `"l"`: derrota (loss)
- * - `"i"`: estado inicial (initial)
- */
-type states = "r" | "t" | "w" | "l" | "i"
+enum states {
+    "inicial", "running", "tie", "win", "loss"
+}
+
 
 export default class Game {
     readonly pieceList: Piece[] = [];
     private _turn: boolean = true;
-    private _gameState: states  = "i";
+    private _gameState: states  = states.inicial;
     
     constructor(
         readonly board: Board,
@@ -53,7 +47,7 @@ export default class Game {
 
     public movePiece(piece: Piece, destination: Pos): boolean {       
         const tile_target = piece.avaliableMoves.find((tile) => tile.position.equals(destination));
-        const prev_tile = this.board.tiles[piece.position.y][piece.position.x];
+        const prev_tile = this.board.getTile(piece);
 
         if (!tile_target) return false;
 
@@ -61,7 +55,10 @@ export default class Game {
             const targetPiece = tile_target.occupiedBy;
 
             targetPiece.attakedTiles.forEach((tile) => {
-                tile.attakedBy.splice(tile.attakedBy.indexOf(piece), 1);
+                const index = tile.attakedBy.findIndex(p => p.ID === targetPiece.ID);
+                if (index !== -1) {
+                    tile.attakedBy.splice(index, 1);
+                }
             });
 
             this.pieceList.splice(this.pieceList.indexOf(targetPiece), 1);

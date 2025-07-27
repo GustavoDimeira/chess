@@ -38,7 +38,13 @@ export default abstract class Piece {
 
     public getAvaliableMoves(board: Board): boolean {
         this.blockeableTiles = [];
-        this._attakedTiles.forEach((tile) => tile.attakedBy.splice(tile.attakedBy.indexOf(this), 1));
+        this._attakedTiles.forEach((tile) => {
+            const index = tile.attakedBy.findIndex(p => p.ID === this.ID);
+            if (index !== -1) {
+                tile.attakedBy.splice(index, 1);
+            }
+        });
+
 
         [this._avaliableMoves, this._attakedTiles] =  this.calculateMoves(board);
 
@@ -81,7 +87,6 @@ export default abstract class Piece {
                                 // A peça entre o rei e essa está pinada
                                 firstPiece.pinned = true;
                                 firstPiece.pinnedOptions = inLineTiles;
-                                console.log(inLineTiles);
                             } else {
                                 this.blockeableTiles = newAvaliableDirection; 
 
