@@ -5,7 +5,7 @@ import Tile from "./Tile";
 export default class Board {
     readonly tiles: Tile[][] = [];
     readonly pieceList: Piece[] = [];
-    public enPassantTiles: Tile[] = [];
+    public enPassantTile: Tile | null = null;
 
     constructor(readonly size: number) {
         for(let y = 0; y < size; y++) {

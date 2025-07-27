@@ -14,13 +14,13 @@ enum states {
 export default class Game {
     // readonly pieceList: Piece[] = [];
     private _turn: boolean = true;
-    private _gameState: states  = states.inicial;
-    
+    private _gameState: states = states.inicial;
+
     constructor(
         readonly board: Board,
         public timer: [number, number],
         readonly playerColor: boolean
-    ) {}
+    ) { }
 
     get turn(): boolean {
         return this._turn;
@@ -93,20 +93,51 @@ export default class Game {
             }
         }
 
-        if (piece instanceof Pawn) { // valdiar movimento especial en passant
+        if (piece instanceof Pawn) {
             const dy = piece.position.y - destination.y;
 
-            if (dy === 2 || dy === -2) { // habilitar en passant para o tile anterior
-                
-                
-            }
+            // Caso o peão tenha avançado 2 casas (possibilita en passant)
+            if (dy === 2 || dy === -2) {
+                const direction = dy === 2 ? -1 : 1;
 
-            if (false) { // validar se a peça tentou capturar como en passant
-        
+                // Tile atrás do peão após ele avançar duas casas
+                this.board.enPassantTile = this.board.getTile(new Pos(
+                    piece.position.y + direction,
+                    piece.position.x
+                ));
+            } else {
+                // Verifica se o movimento atual foi uma captura por en passant
+                if (
+                    this.board.enPassantTile &&
+                    destination.equals(this.board.enPassantTile.position)
+                ) {
+                    const capturedPawnTile = this.board.getTile(new Pos(
+                        piece.position.y,
+                        destination.x
+                    )) as Tile;
+
+                    const capturedPawn = capturedPawnTile.occupiedBy;
+
+                    if (capturedPawn) {
+                        // Remove a peça capturada da lista de ataques
+                        capturedPawn.attakedTiles.forEach((tile) => {
+                            const index = tile.attakedBy.findIndex(p => p.ID === capturedPawn.ID);
+                            if (index !== -1) {
+                                tile.attakedBy.splice(index, 1);
+                            }
+                        });
+
+                        // Remove a peça capturada do tabuleiro
+                        this.board.pieceList.splice(this.board.pieceList.indexOf(capturedPawn), 1);
+                        capturedPawnTile.occupiedBy = null;
+                    }
+                }
+
+                this.board.enPassantTile = null;
             }
+        } else {
+            this.board.enPassantTile = null;
         }
-
-        this.board.enPassantTiles = [];
 
         tile_target.occupiedBy = piece;
         prev_tile.occupiedBy = null;
@@ -130,15 +161,39 @@ export default class Game {
                 this.board.pieceList.forEach((p) => {
                     if (p.color !== color || p instanceof King) return;
 
-                    // valida se a peça é capaz de bloquear ou captrar o atacante, caso tenho apenas 1
                     if (attackers.length === 1) {
                         const attacker = attackers[0];
 
-                        p.avaliableMoves = p.avaliableMoves.filter((tile) => { 
-                            return (attacker.blockeableTiles.includes(tile) || tile.position.equals(attacker.position));
-                        })
+                        p.avaliableMoves = p.avaliableMoves.filter((tile) => {
+                            // Captura direta ou bloqueio
+                            const isBlockingOrCapturing = attacker.blockeableTiles.includes(tile) || tile.position.equals(attacker.position);
+
+                            // Captura por en passant (somente se p é peão e o tile é a casa de en passant)
+                            let isEnPassantCapture = false;
+
+                            if (
+                                p instanceof Pawn &&
+                                this.board.enPassantTile &&
+                                tile.position.equals(this.board.enPassantTile.position)
+                            ) {
+                                // O peão capturado por en passant estaria na mesma linha do peão atacante
+                                const capturedPawnTile = this.board.getTile(new Pos(
+                                    p.position.y,
+                                    tile.position.x
+                                ));
+
+                                const capturedPawn = capturedPawnTile?.occupiedBy;
+                                if (capturedPawn?.ID === attacker.ID) {
+                                    isEnPassantCapture = true;
+                                }
+                            }
+
+                            return isBlockingOrCapturing || isEnPassantCapture;
+                        });
+
                     } else {
-                       p.avaliableMoves = [];
+                        // Mais de um atacante: só o rei pode se mover
+                        p.avaliableMoves = [];
                     }
                 });
             } else { // buscar pelas peças pinadas, apenas caso não tenha atacantes
