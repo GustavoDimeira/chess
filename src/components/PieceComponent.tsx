@@ -1,6 +1,5 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import Piece from "../classes/Piece";
-import Tile from "../classes/Tile";
 
 type PieceProps = {
     piece: Piece;
@@ -25,6 +24,6 @@ export default ({ piece, updateSelected }: PieceProps) => {
         onDrag={handleDrag}
         onDragEnd={handleDrop}
     >
-        {dragging ? "" : piece.icon}
+        {dragging ? `${piece.position.y} - ${piece.position.x}` : piece.icon}
     </div>
 }

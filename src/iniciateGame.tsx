@@ -15,9 +15,7 @@ const game = new Game(board, [10, 10], true);
 const initialPieces = [
   // Peças pretas
   new Rook(new Pos(0, 0), false),
-  new Knight(new Pos(0, 1), false),
-  new Bishop(new Pos(0, 2), false),
-  new Queen(new Pos(0, 3), false),
+ 
   new King(new Pos(0, 4), false),
   new Bishop(new Pos(0, 5), false),
   new Knight(new Pos(0, 6), false),
@@ -40,6 +38,6 @@ const initialPieces = [
 initialPieces.forEach(piece => game.addPiece(piece));
 
 // Atualiza movimentos disponíveis de todas as peças
-game.pieceList.forEach(piece => piece.getAvaliableMoves(game.board));
+game.board.pieceList.forEach(piece => piece.getAvaliableMoves(game.board));
 
 export default game;

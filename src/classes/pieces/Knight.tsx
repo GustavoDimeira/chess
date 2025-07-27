@@ -2,6 +2,7 @@ import Board from "../Board";
 import Piece from "../Piece";
 import Pos from "../Pos";
 import Tile from "../Tile";
+import Rook from "./Rook";
 
 export default class Knight extends Piece {
     constructor(

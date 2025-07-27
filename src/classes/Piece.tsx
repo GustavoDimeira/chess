@@ -4,7 +4,7 @@ import Pos from "./Pos";
 import Tile from "./Tile";
 
 export default abstract class Piece {
-    readonly ID: string = Math.random() + "";
+    readonly ID: string = Math.random() + ""; // todo -> garantir que o id seja unico
     public isFirstMove: boolean = true;
     protected _icon: string = '';
 

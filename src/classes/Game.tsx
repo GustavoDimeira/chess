@@ -1,7 +1,10 @@
 import Board from "./Board";
 import Piece from "./Piece";
 import King from "./pieces/King";
+import Pawn from "./pieces/Pawn";
+import Rook from "./pieces/Rook";
 import Pos from "./Pos";
+import Tile from "./Tile";
 
 enum states {
     "inicial", "running", "tie", "win", "loss"
@@ -9,7 +12,7 @@ enum states {
 
 
 export default class Game {
-    readonly pieceList: Piece[] = [];
+    // readonly pieceList: Piece[] = [];
     private _turn: boolean = true;
     private _gameState: states  = states.inicial;
     
@@ -40,12 +43,12 @@ export default class Game {
         if (!tile || tile.occupiedBy) return false;
 
         tile.occupiedBy = piece;
-        this.pieceList.push(piece);
+        this.board.pieceList.push(piece);
 
         return true;
     }
 
-    public movePiece(piece: Piece, destination: Pos): boolean {       
+    public movePiece(piece: Piece, destination: Pos): boolean {
         const tile_target = piece.avaliableMoves.find((tile) => tile.position.equals(destination));
         const prev_tile = this.board.getTile(piece);
 
@@ -61,8 +64,49 @@ export default class Game {
                 }
             });
 
-            this.pieceList.splice(this.pieceList.indexOf(targetPiece), 1);
+            this.board.pieceList.splice(this.board.pieceList.indexOf(targetPiece), 1);
         }
+
+        if (piece instanceof King) { // validar movimento especial roque
+            const dx = piece.position.x - destination.x;
+
+            if (dx === 2 || dx === -2) { // rei fez o roque
+                let rookStartTile: Tile;
+                let rookEndTile: Tile;
+
+                if (dx === 2) {
+                    // Roque longo (torre na coluna A)
+                    rookStartTile = this.board.getTile(new Pos(piece.position.y, piece.position.x - 4)) as Tile;
+                    rookEndTile = this.board.getTile(new Pos(piece.position.y, piece.position.x - 1)) as Tile;
+                } else {
+                    // Roque curto (torre na coluna H)
+                    rookStartTile = this.board.getTile(new Pos(piece.position.y, piece.position.x + 3)) as Tile;
+                    rookEndTile = this.board.getTile(new Pos(piece.position.y, piece.position.x + 1)) as Tile;
+                }
+
+                const rook = rookStartTile.occupiedBy as Piece;
+
+                rookEndTile.occupiedBy = rook;
+                rookStartTile.occupiedBy = null;
+                rook.position = rookEndTile.position;
+                rook.isFirstMove = false;
+            }
+        }
+
+        if (piece instanceof Pawn) { // valdiar movimento especial en passant
+            const dy = piece.position.y - destination.y;
+
+            if (dy === 2 || dy === -2) { // habilitar en passant para o tile anterior
+                
+                
+            }
+
+            if (false) { // validar se a peça tentou capturar como en passant
+        
+            }
+        }
+
+        this.board.enPassantTiles = [];
 
         tile_target.occupiedBy = piece;
         prev_tile.occupiedBy = null;
@@ -70,10 +114,10 @@ export default class Game {
         piece.isFirstMove = false;
 
         // Atualiza todos os movimentos primeiro
-        this.pieceList.forEach((p) => p.getAvaliableMoves(this.board));
+        this.board.pieceList.forEach((p) => p.getAvaliableMoves(this.board));
 
         // Recalcula também os reis
-        const kings = this.pieceList.filter((p) => p instanceof King);
+        const kings = this.board.pieceList.filter((p) => p instanceof King);
         kings.forEach((king) => king.getAvaliableMoves(this.board));
 
         kings.forEach((king) => {
@@ -83,7 +127,7 @@ export default class Game {
             const attackers = kingTile.attackedByEnemies(color);
 
             if (attackers.length >= 1) {
-                this.pieceList.forEach((p) => {
+                this.board.pieceList.forEach((p) => {
                     if (p.color !== color || p instanceof King) return;
 
                     // valida se a peça é capaz de bloquear ou captrar o atacante, caso tenho apenas 1
@@ -98,7 +142,7 @@ export default class Game {
                     }
                 });
             } else { // buscar pelas peças pinadas, apenas caso não tenha atacantes
-                this.pieceList.forEach((piece) => {
+                this.board.pieceList.forEach((piece) => {
                     if (piece.color === color) {
                         if (piece.pinned) {
                             piece.avaliableMoves = piece.avaliableMoves.filter(tile => piece.pinnedOptions.includes(tile))
