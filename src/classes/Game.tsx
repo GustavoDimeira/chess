@@ -31,7 +31,7 @@ export default class Game {
     }
 
     private validateState() {
-
+        // todo
     }
 
     public addPiece(piece: Piece, position: Pos | null = null): boolean {
@@ -48,109 +48,79 @@ export default class Game {
         return true;
     }
 
-    public movePiece(piece: Piece, destination: Pos): boolean {
-        const tile_target = piece.avaliableMoves.find((tile) => tile.position.equals(destination));
-        const prev_tile = this.board.getTile(piece);
+    private removePiece(tile_target: Tile): boolean {
+        if (!tile_target.occupiedBy) return false;
+        const targetPiece = tile_target.occupiedBy;
 
-        if (!tile_target) return false;
-
-        if (tile_target.occupiedBy) { // matar a peça ocupante
-            const targetPiece = tile_target.occupiedBy;
-
-            targetPiece.attakedTiles.forEach((tile) => {
-                const index = tile.attakedBy.findIndex(p => p.ID === targetPiece.ID);
-                if (index !== -1) {
-                    tile.attakedBy.splice(index, 1);
-                }
-            });
-
-            this.board.pieceList.splice(this.board.pieceList.indexOf(targetPiece), 1);
-        }
-
-        if (piece instanceof King) { // validar movimento especial roque
-            const dx = piece.position.x - destination.x;
-
-            if (dx === 2 || dx === -2) { // rei fez o roque
-                let rookStartTile: Tile;
-                let rookEndTile: Tile;
-
-                if (dx === 2) {
-                    // Roque longo (torre na coluna A)
-                    rookStartTile = this.board.getTile(new Pos(piece.position.y, piece.position.x - 4)) as Tile;
-                    rookEndTile = this.board.getTile(new Pos(piece.position.y, piece.position.x - 1)) as Tile;
-                } else {
-                    // Roque curto (torre na coluna H)
-                    rookStartTile = this.board.getTile(new Pos(piece.position.y, piece.position.x + 3)) as Tile;
-                    rookEndTile = this.board.getTile(new Pos(piece.position.y, piece.position.x + 1)) as Tile;
-                }
-
-                const rook = rookStartTile.occupiedBy as Piece;
-
-                rookEndTile.occupiedBy = rook;
-                rookStartTile.occupiedBy = null;
-                rook.position = rookEndTile.position;
-                rook.isFirstMove = false;
+        targetPiece.attakedTiles.forEach((tile) => {
+            const index = tile.attakedBy.findIndex(p => p.ID === targetPiece.ID);
+            if (index !== -1) {
+                tile.attakedBy.splice(index, 1);
             }
-        }
+        });
 
-        if (piece instanceof Pawn) {
-            const dy = piece.position.y - destination.y;
+        this.board.pieceList.splice(this.board.pieceList.indexOf(targetPiece), 1);
+        tile_target.occupiedBy = null;
+        return true;
+    }
 
-            // Caso o peão tenha avançado 2 casas (possibilita en passant)
-            if (dy === 2 || dy === -2) {
-                const direction = dy === 2 ? -1 : 1;
+    private validateCastle(piece: Piece, destination: Pos): void {
+        const dx = piece.position.x - destination.x;
 
-                // Tile atrás do peão após ele avançar duas casas
-                this.board.enPassantTile = this.board.getTile(new Pos(
-                    piece.position.y + direction,
-                    piece.position.x
-                ));
+        if (dx === 2 || dx === -2) { // rei fez o roque
+            let rookStartTile: Tile;
+            let rookEndTile: Tile;
+
+            if (dx === 2) {
+                // Roque longo (torre na coluna A)
+                rookStartTile = this.board.getTile(new Pos(piece.position.y, piece.position.x - 4)) as Tile;
+                rookEndTile = this.board.getTile(new Pos(piece.position.y, piece.position.x - 1)) as Tile;
             } else {
-                // Verifica se o movimento atual foi uma captura por en passant
-                if (
-                    this.board.enPassantTile &&
-                    destination.equals(this.board.enPassantTile.position)
-                ) {
-                    const capturedPawnTile = this.board.getTile(new Pos(
-                        piece.position.y,
-                        destination.x
-                    )) as Tile;
-
-                    const capturedPawn = capturedPawnTile.occupiedBy;
-
-                    if (capturedPawn) {
-                        // Remove a peça capturada da lista de ataques
-                        capturedPawn.attakedTiles.forEach((tile) => {
-                            const index = tile.attakedBy.findIndex(p => p.ID === capturedPawn.ID);
-                            if (index !== -1) {
-                                tile.attakedBy.splice(index, 1);
-                            }
-                        });
-
-                        // Remove a peça capturada do tabuleiro
-                        this.board.pieceList.splice(this.board.pieceList.indexOf(capturedPawn), 1);
-                        capturedPawnTile.occupiedBy = null;
-                    }
-                }
-
-                this.board.enPassantTile = null;
+                // Roque curto (torre na coluna H)
+                rookStartTile = this.board.getTile(new Pos(piece.position.y, piece.position.x + 3)) as Tile;
+                rookEndTile = this.board.getTile(new Pos(piece.position.y, piece.position.x + 1)) as Tile;
             }
+
+            const rook = rookStartTile.occupiedBy as Piece;
+
+            rookEndTile.occupiedBy = rook;
+            rookStartTile.occupiedBy = null;
+            rook.position = rookEndTile.position;
+            rook.isFirstMove = false;
+        }
+    }
+
+    private validateEnPassant(piece: Pawn, destination: Pos) {
+        const dy = piece.position.y - destination.y;
+
+        // Caso o peão tenha avançado 2 casas (possibilita en passant)
+        if (dy === 2 || dy === -2) {
+            const direction = dy === 2 ? -1 : 1;
+
+            // Tile atrás do peão após ele avançar duas casas
+            this.board.enPassantTile = this.board.getTile(new Pos(
+                piece.position.y + direction,
+                piece.position.x
+            ));
         } else {
+            // Verifica se o movimento atual foi uma captura por en passant
+            if (
+                this.board.enPassantTile &&
+                destination.equals(this.board.enPassantTile.position)
+            ) {
+                const capturedPawnTile = this.board.getTile(new Pos(
+                    piece.position.y,
+                    destination.x
+                )) as Tile;
+
+                this.removePiece(capturedPawnTile); // remove o peão
+            }
+
             this.board.enPassantTile = null;
         }
+    }
 
-        tile_target.occupiedBy = piece;
-        prev_tile.occupiedBy = null;
-        piece.position = destination;
-        piece.isFirstMove = false;
-
-        // Atualiza todos os movimentos primeiro
-        this.board.pieceList.forEach((p) => p.getAvaliableMoves(this.board));
-
-        // Recalcula também os reis
-        const kings = this.board.pieceList.filter((p) => p instanceof King);
-        kings.forEach((king) => king.getAvaliableMoves(this.board));
-
+    private validateCheck(kings: Piece[]) {
         kings.forEach((king) => {
             const color = king.color;
 
@@ -209,6 +179,36 @@ export default class Game {
                 });
             }
         });
+    }
+
+    public movePiece(piece: Piece, destination: Pos): boolean {
+        const tile_target = piece.avaliableMoves.find((tile) => tile.position.equals(destination));
+        const prev_tile = this.board.getTile(piece);
+
+        if (!tile_target) return false;
+
+        if (tile_target.occupiedBy) this.removePiece(tile_target);
+
+        if (piece instanceof King) this.validateCastle(piece, destination);
+        if (piece instanceof Pawn) this.validateEnPassant(piece, destination);
+        else {
+            this.board.enPassantTile = null;
+        }
+
+        // mover a peça
+        tile_target.occupiedBy = piece;
+        prev_tile.occupiedBy = null;
+        piece.position = destination;
+        piece.isFirstMove = false;
+
+        // Atualiza todos as peças
+        this.board.pieceList.forEach((p) => p.getAvaliableMoves(this.board));
+
+        // Recalcula também os reis para garantir consistencia
+        const kings: Piece[] = this.board.pieceList.filter((p) => p instanceof King);
+        kings.forEach((king) => king.getAvaliableMoves(this.board));
+
+        this.validateCheck(kings);
 
         this.validateState();
 
