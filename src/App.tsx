@@ -3,7 +3,7 @@ import './App.css';
 import BoardComponent from './components/BoardComponent';
 import SideInfos from './components/SideInfos';
 
-const MIN_TILE_SIZE = 10; // Minimum tile size in pixels
+const MIN_TILE_SIZE = 40; // Minimum tile size in pixels
 const MAX_TILE_SIZE = 80; // Maximum tile size in pixels
 
 function App() {
@@ -30,25 +30,33 @@ function App() {
   const isPortrait = screenHeight > screenWidth;
   const isSmallScreen = screenWidth < 1000; // Your existing breakpoint
 
-  let availableWidth = screenWidth;
-  let availableHeight = screenHeight;
+  // Calculate effective available viewport dimensions for the board
+  const appPadding = 20; // From App.css padding
+  const boardBorder = 5; // From App.css board-container border
+  const effectiveViewportWidth = screenWidth - (2 * appPadding);
+  const effectiveViewportHeight = screenHeight - (2 * appPadding);
 
-  // Adjust available space based on layout
+  let maxBoardWidth = effectiveViewportWidth;
+  let maxBoardHeight = effectiveViewportHeight;
+
   if (!isSmallScreen) {
     // Desktop/Large screens: SideInfos is beside the board
-    availableWidth -= (250 + 80 + 40); // SideInfos width + margin-left + App padding
+    const sideInfosWidth = 250; // From App.css width
+    const sideInfosMarginLeft = 40; // From App.css margin-left
+    maxBoardWidth = effectiveViewportWidth - (sideInfosWidth + sideInfosMarginLeft);
   } else if (isPortrait) {
     // Small screen, portrait: SideInfos is below the board
-    availableHeight -= (250 + 80 + 40); // Estimated SideInfos height + App padding
+    // Estimate SideInfos height (rough sum of its elements + padding/margins)
+    // This is a rough estimate, actual height might vary
+    const estimatedSideInfosHeight = 380; 
+    maxBoardHeight = effectiveViewportHeight - estimatedSideInfosHeight;
   }
 
   // Calculate dynamic tile size based on the smaller of available width or height
-  const calculatedTileSize = Math.min(
-    MAX_TILE_SIZE,
-    Math.max(MIN_TILE_SIZE,
-      Math.min(availableWidth / 9, availableHeight / 9) // Divide by 8 for 8 tiles
-    )
-  );
+  let calculatedTileSize = Math.min(maxBoardWidth / 8, maxBoardHeight / 8);
+
+  // Ensure tile size respects min and max limits
+  calculatedTileSize = Math.min(MAX_TILE_SIZE, Math.max(MIN_TILE_SIZE, calculatedTileSize));
 
   return (
     <div className="App">

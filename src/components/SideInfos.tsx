@@ -19,16 +19,18 @@ export default ({ isSideInfosOpen, toggleSideInfos, screenWidth, isPortrait }: S
             )}
             {isPortrait ? (
                 <div className="portrait-content">
-                    <div className="portrait-timers">
+                    <div className="portrait-timers-wrapper">
                         <div className="timer">10:00</div>
                         <div className="timer">10:00</div>
                     </div>
-                    <div className="moves-history portrait-moves-history">
-                        {/* Moves will be added here */}
-                    </div>
-                    <div className="portrait-actions">
-                        <button>Resign</button>
-                        <button>Offer Draw</button>
+                    <div className="portrait-bottom-section">
+                        <div className="moves-history portrait-moves-history">
+                            {/* Moves will be added here */}
+                        </div>
+                        <div className="portrait-actions-wrapper">
+                            <button className="action-button">Resign</button>
+                            <button className="action-button">Offer Draw</button>
+                        </div>
                     </div>
                 </div>
             ) : (
@@ -41,8 +43,8 @@ export default ({ isSideInfosOpen, toggleSideInfos, screenWidth, isPortrait }: S
                         {/* Moves will be added here */}
                     </div>
                     <div className="actions">
-                        <button>Resign</button>
-                        <button>Offer Draw</button>
+                        <button className="action-button">Resign</button>
+                        <button className="action-button">Offer Draw</button>
                     </div>
                 </>
             )}

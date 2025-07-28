@@ -10,7 +10,7 @@ export default class Bishop extends Piece {
     ) {
         super(position, color);
 
-        this._icon = this.color ? "♗" : "♝";
+        this._icon = "♝"; // Changed to filled icon
     };
 
     protected calculateMoves(board: Board): [Tile[], Tile[]] {

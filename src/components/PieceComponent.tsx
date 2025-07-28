@@ -20,7 +20,7 @@ export default ({ piece, updateSelected, tileSize }: PieceProps) => {
     }
 
     return <div
-        className={`piece ${dragging ? 'dragging' : ''}`}
+        className={`piece ${piece.color ? 'white-piece' : 'black-piece'} ${dragging ? 'dragging' : ''}`}
         draggable
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}

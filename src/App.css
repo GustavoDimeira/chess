@@ -78,17 +78,27 @@
   width: 100%;
   height: 100%;
   user-select: none;
+  /* Add text-shadow for all pieces */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .piece.dragging {
   opacity: 0.5;
 }
 
+.piece.white-piece {
+  color: #e0e0e0; /* Slightly darker white */
+}
+
+.piece.black-piece {
+  color: #333333; /* Dark gray for black pieces */
+}
+
 /* Side Infos */
 #sideInfos {
   display: flex;
   flex-direction: column;
-  margin-left: 2%; /* Increased margin for better separation */
+  margin-left: 40px; /* Increased margin for better separation */
   color: white;
   width: 250px; /* Slightly wider for more content */
   background-color: #2a2a2a; /* Darker background for side panel */
@@ -122,7 +132,7 @@
   overflow-y: auto; /* Enable scrolling for move history */
 }
 
-.actions button {
+.action-button {
   width: 100%;
   padding: 12px;
   margin-bottom: 10px;
@@ -135,7 +145,7 @@
   transition: background-color 0.2s ease; /* Smooth transition on hover */
 }
 
-.actions button:hover {
+.action-button:hover {
   background-color: #777;
 }
 
@@ -159,6 +169,7 @@
     flex-direction: column; /* Stack items vertically */
     justify-content: flex-start; /* Align to top */
     padding-top: 60px; /* Make space for the toggle button */
+    align-items: center; /* Center items horizontally when stacked */
   }
 
   #sideInfos {
@@ -194,63 +205,81 @@
   .App {
     flex-direction: column; /* Stack items vertically */
     justify-content: flex-start; /* Align to top */
+    align-items: center; /* Center items horizontally */
   }
 
   #sideInfos {
     position: relative; /* Change from fixed to relative */
-    width: 100%; /* Take full width */
+    max-width: 640px; /* Max width of the board (8 * 80px) */
+    width: calc(100% - 40px); /* Take full width minus App padding, but respect max-width */
     height: auto; /* Adjust height automatically */
     margin-top: 20px; /* Add space below the board */
     transform: translateX(0); /* No need for transform */
     box-shadow: none; /* Remove shadow if it looks odd */
     padding: 10px; /* Adjust padding for portrait */
+    margin: 20px auto; /* Center horizontally */
   }
 
-  #sideInfos.portrait-layout .portrait-content {
+  #sideInfos.portrait-layout {
     display: flex;
-    flex-direction: row; /* Arrange children in a row */
-    justify-content: space-around; /* Distribute space evenly */
-    align-items: flex-start; /* Align items to the top */
+    flex-direction: column; /* Stack main sections vertically */
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
     box-sizing: border-box;
   }
 
-  .portrait-timers {
+  .portrait-timers-wrapper {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    margin: 1vmin;
+  }
+
+  #sideInfos.portrait-layout .timers {
+    flex-direction: row; /* Timers side-by-side */
+    justify-content: space-around; /* Space out timers */
+    width: 100%; /* Take full width */
+    margin-bottom: 15px;
+  }
+
+  .portrait-content {
+    width: 75%;
+  }
+
+  .portrait-bottom-section {
+    display: flex;
+    flex-direction: row; /* Moves history and actions side-by-side */
+    width: 100%;
+    flex-grow: 1; /* Allow this section to take available vertical space */
     justify-content: space-around;
-    height: 100%;
-    min-width: 80px; /* Ensure timers have enough space */
+    align-items: flex-start; /* Align items to the start */
   }
 
   .portrait-moves-history {
-    flex-grow: 1; /* Allow moves history to take available space */
-    height: 150px; /* Fixed height for scrollable area */
-    margin: 0 10px; /* Add some horizontal margin */
+    flex-grow: 1; /* Allow moves history to take available horizontal space */
+    height: 100%; /* Take full height of parent (portrait-bottom-section) */
+    max-height: 200px; /* Limit max height if needed, but keep scrollable */
+    overflow-y: auto; /* Keep scrollable */
+    margin-right: 10px; /* Add some horizontal margin */
+    min-width: 120px; /* Ensure enough width for text */
+    box-sizing: border-box; /* Ensure padding/border are included */
   }
 
-  .portrait-actions {
+  .portrait-actions-wrapper {
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    height: 100%;
+    flex-direction: column; /* Stack buttons vertically */
+    justify-content: flex-start; /* Align buttons to the top */
     min-width: 80px; /* Ensure buttons have enough space */
+    height: 100%; /* Take full height of parent (portrait-bottom-section) */
+    box-sizing: border-box; /* Ensure padding/border are included */
   }
 
-  .portrait-actions button {
+  .portrait-actions .action-button {
     margin-bottom: 5px; /* Reduce margin between buttons */
+    flex-grow: 1; /* Allow buttons to grow and fill space */
   }
 
   .toggle-side-infos {
     display: none; /* Hide toggle button in this layout */
   }
-
-  .timer {
-    margin-top: 20%;
-    margin-bottom: 20%;
-  }
-}
-
-@media (max-width: 450px) {
-
 }
