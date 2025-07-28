@@ -1,70 +1,109 @@
-# Getting Started with Create React App
+# Chess Game
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A responsive web-based chess game built with React and TypeScript, implementing core chess rules and providing an interactive user experience.
 
-## Available Scripts
+## Table of Contents
 
-In the project directory, you can run:
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Future Enhancements](#future-enhancements)
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+-   **Core Chess Logic:** Implements standard chess piece movements, captures, and turn-based gameplay.
+-   **Special Moves:**
+    -   **Castling:** Supports both kingside and queenside castling.
+    -   **En Passant:** Correctly handles the en passant pawn capture rule.
+-   **Check Validation:** Detects and manages 'check' situations, restricting moves that would leave the king in check.
+-   **Interactive Board:**
+    -   Dynamic board rendering with light and dark squares.
+    -   Visual highlighting of possible moves for selected pieces.
+    -   Visual indication for capture moves.
+    -   Drag-and-drop functionality for pieces.
+-   **Responsive Design:** Adapts the layout and board size for various screen dimensions, including mobile and portrait orientations.
+-   **Game State Management:** Manages the game state, including piece positions, turn, and available moves.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Technologies Used
 
-### `npm test`
+-   **React:** Frontend library for building the user interface.
+-   **TypeScript:** Adds static typing to JavaScript, improving code quality and maintainability.
+-   **CSS:** For styling the application and ensuring a visually appealing design.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Installation
 
-### `npm run build`
+To get a local copy up and running, follow these simple steps.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/your-username/chess.git
+    cd chess
+    ```
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Usage
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+To run the game in development mode:
 
-### `npm run eject`
+```bash
+npm start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+This will open the application in your browser at `http://localhost:3000`.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+To build the project for production:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+npm run build
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+This command builds the app for production to the `build` folder.
 
-## Learn More
+## Project Structure
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The project follows a standard React application structure, with a focus on clear separation of concerns for game logic and UI components.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+chess/
+├── public/                 # Public assets (index.html, favicon, etc.)
+├── src/
+│   ├── App.tsx             # Main application component and responsiveness logic
+│   ├── App.css             # Global styles for the application
+│   ├── index.tsx           # Entry point of the React application
+│   ├── initiateGame.tsx    # Initializes the game board and pieces
+│   ├── classes/            # Core game logic and chess piece definitions
+│   │   ├── Board.tsx       # Represents the chess board
+│   │   ├── Game.tsx        # Manages game state, turns, and move validation
+│   │   ├── Piece.tsx       # Abstract base class for all chess pieces
+│   │   ├── Pos.tsx         # Utility class for board positions (x, y)
+│   │   ├── Tile.tsx        # Represents a single square on the board
+│   │   └── pieces/         # Individual chess piece implementations
+│   │       ├── Bishop.tsx
+│   │       ├── King.tsx
+│   │       ├── Knight.tsx
+│   │       ├── Pawn.tsx
+│   │       ├── Queen.tsx
+│   │       └── Rook.tsx
+│   └── components/         # Reusable React components for the UI
+│       ├── BoardComponent.tsx # Renders the chess board and handles piece interactions
+│       ├── PieceComponent.tsx # Renders individual chess pieces
+│       └── SideInfos.tsx    # Displays game information (timers, move history, actions)
+├── package.json            # Project dependencies and scripts
+├── tsconfig.json           # TypeScript configuration
+└── README.md               # This file
+```
 
-### Code Splitting
+## Future Enhancements
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+-   **Game Over Conditions:** Implement checkmate, stalemate, and draw conditions.
+-   **Move History:** Display a detailed history of moves.
+-   **Timers:** Fully functional game timers for each player.
+-   **Promotion:** Implement pawn promotion to other pieces.
+-   **Undo/Redo Moves:** Add functionality to revert or reapply moves.
+-   **AI Opponent:** Develop a basic AI to play against.
+-   **Improved UI/UX:** Enhance visual feedback and animations.
