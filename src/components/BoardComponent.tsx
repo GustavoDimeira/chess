@@ -5,9 +5,11 @@ import game from '../iniciateGame';
 import Tile from '../classes/Tile';
 import Piece from '../classes/Piece';
 
-const TILE_SIZE = 80; // Define this as a constant for easy access
+type BoardComponentProps = {
+    tileSize: number;
+};
 
-export default () => {
+export default ({ tileSize }: BoardComponentProps) => {
     const [board, updateBoard] = useState(game.board.tiles);
     const [selectedPiece, updateSelected] = useState<Piece | null>(null);
 
@@ -42,8 +44,11 @@ export default () => {
     };
 
     return (
-        <div className="board-wrapper">
-            <div className="board-container">
+        <div className="board-wrapper" style={{ width: tileSize * 8, height: tileSize * 8 }}>
+            <div className="board-container" style={{
+                gridTemplateColumns: `repeat(8, ${tileSize}px)`,
+                gridTemplateRows: `repeat(8, ${tileSize}px)`,
+            }}>
                 {board.flat().map((tile, index) => {
                     const tileColorClass = (Math.floor(index / 8) + index % 8) % 2 === 0 ? 'light' : 'dark';
                     const isCapture = tile.highLighted && tile.occupiedBy;
@@ -54,8 +59,9 @@ export default () => {
                             onDragOver={(event) => event.preventDefault()}
                             onDrop={() => handleTileClick(tile)}
                             onClick={() => handleTileClick(tile)}
+                            style={{ width: tileSize, height: tileSize }}
                         >
-                            {tile.highLighted && !tile.occupiedBy && <div className="highlight-dot"></div>}
+                            {tile.highLighted && !tile.occupiedBy && <div className="highlight-dot" style={{ width: tileSize * 0.25, height: tileSize * 0.25 }}></div>}
                         </div>
                     );
                 })}
@@ -66,7 +72,9 @@ export default () => {
                         key={piece.ID}
                         className="piece-wrapper"
                         style={{
-                            transform: `translate(${piece.position.x * TILE_SIZE}px, ${piece.position.y * TILE_SIZE}px)`,
+                            transform: `translate(${piece.position.x * tileSize}px, ${piece.position.y * tileSize}px)`,
+                            width: tileSize,
+                            height: tileSize,
                         }}
                         onDragOver={(event) => event.preventDefault()}
                         onClick={() => handleTileClick(game.board.getTile(piece))}
@@ -75,6 +83,7 @@ export default () => {
                         <PieceComponent
                             piece={piece}
                             updateSelected={updateSelected}
+                            tileSize={tileSize}
                         />
                     </div>
                 ))}

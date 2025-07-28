@@ -3,22 +3,25 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: #282c34;
+  min-height: 100vh;
+  width: 100%; /* Make the app take full width */
+  background: linear-gradient(to bottom right, #3a3a3a, #1a1a1a); /* Dark gradient background */
+  padding: 20px; /* Add some padding around the content */
+  box-sizing: border-box; /* Include padding in width/height */
+  position: relative; /* For positioning the toggle button */
 }
 
 /* Board Wrapper */
 .board-wrapper {
   position: relative;
-  width: 640px; /* 8 * 80px */
-  height: 640px; /* 8 * 80px */
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5); /* Add a subtle shadow */
+  border-radius: 8px; /* Slightly rounded corners */
+  overflow: hidden; /* Hide overflow from shadow/border-radius */
 }
 
 /* Board Container */
 .board-container {
   display: grid;
-  grid-template-columns: repeat(8, 80px);
-  grid-template-rows: repeat(8, 80px);
   border: 5px solid #8B4513;
 }
 
@@ -27,11 +30,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 80px;
-  height: 80px;
   box-sizing: border-box;
   position: relative;
-  user-select: none; /* Apply user-select here */
+  user-select: none;
 }
 
 .tile.light {
@@ -44,8 +45,6 @@
 
 /* Highlight Dot for Possible Moves */
 .highlight-dot {
-  width: 20px;
-  height: 20px;
   background-color: rgba(128, 128, 128, 0.7);
   border-radius: 50%;
 }
@@ -62,27 +61,23 @@
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none; /* Allow clicks to pass through to the board */
+  pointer-events: none;
 }
 
 /* Piece Wrapper for Animation */
 .piece-wrapper {
   position: absolute;
-  width: 80px;
-  height: 80px;
-  transition: transform 0.2s ease-in-out; /* Animation */
-  pointer-events: auto; /* Re-enable pointer events for pieces */
+  transition: transform 0.2s ease-in-out;
+  pointer-events: auto;
 }
 
 /* Piece Component Style */
 .piece {
   cursor: grab;
   text-align: center;
-  font-size: 50px;
-  line-height: 80px;
   width: 100%;
   height: 100%;
-  user-select: none; /* Apply user-select here */
+  user-select: none;
 }
 
 .piece.dragging {
@@ -93,37 +88,169 @@
 #sideInfos {
   display: flex;
   flex-direction: column;
-  margin-left: 20px;
+  margin-left: 2%; /* Increased margin for better separation */
   color: white;
-  width: 200px;
+  width: 250px; /* Slightly wider for more content */
+  background-color: #2a2a2a; /* Darker background for side panel */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.4); /* Shadow for depth */
+  transition: transform 0.3s ease-in-out; /* For slide-in/out animation */
 }
 
 .timers {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
+  justify-content: space-around; /* Space out timers */
+  margin-bottom: 25px;
+  font-size: 1.2em;
 }
 
 .timer {
-  background-color: #444;
-  padding: 10px;
-  border-radius: 5px;
+  background-color: #3b3b3b;
+  padding: 12px 15px;
+  border-radius: 6px;
+  min-width: 80px;
+  text-align: center;
 }
 
 .moves-history {
-  background-color: #444;
-  height: 400px;
-  margin-bottom: 20px;
-  border-radius: 5px;
+  background-color: #3b3b3b;
+  height: 40vh;
+  margin-bottom: 25px;
+  border-radius: 6px;
+  padding: 10px;
+  overflow-y: auto; /* Enable scrolling for move history */
 }
 
 .actions button {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   margin-bottom: 10px;
-  border-radius: 5px;
+  border-radius: 6px;
   border: none;
-  background-color: #666;
+  background-color: #555;
   color: white;
   cursor: pointer;
+  font-size: 1.1em;
+  transition: background-color 0.2s ease; /* Smooth transition on hover */
+}
+
+.actions button:hover {
+  background-color: #777;
+}
+
+/* Toggle button for SideInfos on small screens */
+.toggle-side-infos {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: #555;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1000; /* Ensure it's above other content */
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 1000px) {
+  .App {
+    flex-direction: column; /* Stack items vertically */
+    justify-content: flex-start; /* Align to top */
+    padding-top: 60px; /* Make space for the toggle button */
+  }
+
+  #sideInfos {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 300px; /* Fixed width for overlay */
+    margin-left: 0;
+    transform: translateX(100%); /* Start off-screen */
+    z-index: 999; /* Appear above the board */
+    background-color: #2a2a2a; /* Ensure background is solid */
+  }
+
+  #sideInfos.open {
+    transform: translateX(0); /* Slide in */
+  }
+
+  .close-side-infos {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5em;
+    cursor: pointer;
+  }
+}
+
+/* Media query for portrait orientation (height > width) */
+@media (orientation: portrait) and (max-width: 1000px) {
+  .App {
+    flex-direction: column; /* Stack items vertically */
+    justify-content: flex-start; /* Align to top */
+  }
+
+  #sideInfos {
+    position: relative; /* Change from fixed to relative */
+    width: 100%; /* Take full width */
+    height: auto; /* Adjust height automatically */
+    margin-top: 20px; /* Add space below the board */
+    transform: translateX(0); /* No need for transform */
+    box-shadow: none; /* Remove shadow if it looks odd */
+    padding: 10px; /* Adjust padding for portrait */
+  }
+
+  #sideInfos.portrait-layout .portrait-content {
+    display: flex;
+    flex-direction: row; /* Arrange children in a row */
+    justify-content: space-around; /* Distribute space evenly */
+    align-items: flex-start; /* Align items to the top */
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .portrait-timers {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
+    min-width: 80px; /* Ensure timers have enough space */
+  }
+
+  .portrait-moves-history {
+    flex-grow: 1; /* Allow moves history to take available space */
+    height: 150px; /* Fixed height for scrollable area */
+    margin: 0 10px; /* Add some horizontal margin */
+  }
+
+  .portrait-actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
+    min-width: 80px; /* Ensure buttons have enough space */
+  }
+
+  .portrait-actions button {
+    margin-bottom: 5px; /* Reduce margin between buttons */
+  }
+
+  .toggle-side-infos {
+    display: none; /* Hide toggle button in this layout */
+  }
+
+  .timer {
+    margin-top: 20%;
+    margin-bottom: 20%;
+  }
+}
+
+@media (max-width: 450px) {
+
 }

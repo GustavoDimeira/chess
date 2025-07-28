@@ -4,9 +4,10 @@ import Piece from "../classes/Piece";
 type PieceProps = {
     piece: Piece;
     updateSelected: Dispatch<SetStateAction<Piece | null>>;
+    tileSize: number;
 };
 
-export default ({ piece, updateSelected }: PieceProps) => {
+export default ({ piece, updateSelected, tileSize }: PieceProps) => {
     const [dragging, updateDragging] = useState(false);
 
     const handleDragStart = () => {
@@ -23,6 +24,7 @@ export default ({ piece, updateSelected }: PieceProps) => {
         draggable
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
+        style={{ fontSize: tileSize * 0.625, lineHeight: `${tileSize}px` }}
     >
         {piece.icon}
     </div>

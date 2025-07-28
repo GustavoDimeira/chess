@@ -142,7 +142,14 @@ export default class Game {
 
                         p.avaliableMoves = p.avaliableMoves.filter((tile) => {
                             // Captura direta ou bloqueio
-                            const isBlockingOrCapturing = attacker.blockeableTiles.includes(tile) || tile.position.equals(attacker.position);
+                            const isBlockingOrCapturing = (
+                                (
+                                    attacker.blockeableTiles.includes(tile) || tile.position.equals(attacker.position)
+                                ) &&
+                                (
+                                    !p.pinned || p.pinnedOptions.includes(this.board.getTile(attacker))
+                                )
+                            );
 
                             // Captura por en passant (somente se p é peão e o tile é a casa de en passant)
                             let isEnPassantCapture = false;
