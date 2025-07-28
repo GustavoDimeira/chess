@@ -18,6 +18,16 @@ export default ({ tileSize }: BoardComponentProps) => {
     const [gameState, setGameState] = useState<GameState>(game.gameState);
 
     useEffect(() => {
+        const timer = setInterval(() => {
+            if (game.gameState !== gameState) {
+                setGameState(game.gameState);
+            }
+        }, 200); // Check for game state changes periodically
+
+        return () => clearInterval(timer);
+    }, [gameState]);
+
+    useEffect(() => {
         game.board.tiles.forEach(line => line.forEach(tile => tile.highLighted = false));
 
         if (selectedPiece?.color === game.turn) {
@@ -66,6 +76,7 @@ export default ({ tileSize }: BoardComponentProps) => {
                 <GameStatusPopup 
                     gameState={gameState} 
                     winner={game.winner}
+                    endReason={game.gameEndReason}
                     onReset={handleResetGame} 
                 />
             )}

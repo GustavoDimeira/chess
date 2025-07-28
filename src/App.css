@@ -122,6 +122,12 @@
   border-radius: 6px;
   min-width: 40px;
   text-align: center;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.timer.active {
+  background-color: #5865f2; /* Highlight color for the active timer */
+  box-shadow: 0 0 10px rgba(88, 101, 242, 0.7);
 }
 
 .moves-history {

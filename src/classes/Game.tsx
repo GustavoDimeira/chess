@@ -5,21 +5,31 @@ import Pawn from "./pieces/Pawn";
 import Pos from "./Pos";
 import Tile from "./Tile";
 
+import Bishop from "./pieces/Bishop";
+import Knight from "./pieces/Knight";
+import Queen from "./pieces/Queen";
+import Rook from "./pieces/Rook";
+
 export enum GameState {
     inicial, running, tie, win
 }
+
+export type GameEndReason = 'checkmate' | 'timeout' | 'stalemate' | 'insufficient_material';
 
 export default class Game {
     private _turn: boolean = true;
     private _gameState: GameState = GameState.inicial;
     public winner: boolean | null = null; // true for white, false for black
+    public gameEndReason: GameEndReason | null = null;
+    private timerInterval: NodeJS.Timeout | null = null;
 
     constructor(
         readonly board: Board,
-        public timer: [number, number],
+        public timer: [number, number], // [whiteTime, blackTime] in seconds
         public playerColor: boolean
     ) {
         this._gameState = GameState.running;
+        this.startTimer();
     }
 
     get turn(): boolean {
@@ -28,6 +38,64 @@ export default class Game {
 
     get gameState(): GameState {
         return this._gameState;
+    }
+
+    private startTimer(): void {
+        if (this.timerInterval) clearInterval(this.timerInterval);
+
+        this.timerInterval = setInterval(() => {
+            if (this._gameState !== GameState.running) {
+                clearInterval(this.timerInterval as NodeJS.Timeout);
+                return;
+            }
+
+            const timerIndex = this._turn ? 0 : 1;
+            this.timer[timerIndex] -= 0.1;
+
+            if (this.timer[timerIndex] <= 0) {
+                this.timer[timerIndex] = 0;
+                clearInterval(this.timerInterval as NodeJS.Timeout);
+                this.handleTimeout();
+            }
+        }, 100);
+    }
+
+    private handleTimeout(): void {
+        const winnerColor = !this._turn;
+        // Check if the player who has time has sufficient material to win
+        if (this.hasSufficientMaterial(winnerColor)) {
+            this._gameState = GameState.win;
+            this.winner = winnerColor;
+            this.gameEndReason = 'timeout';
+        } else {
+            this._gameState = GameState.tie;
+            this.winner = null;
+            this.gameEndReason = 'insufficient_material';
+        }
+    }
+
+    private hasSufficientMaterial(color: boolean): boolean {
+        const pieces = this.board.pieceList.filter(p => p.color === color);
+
+        // Queen or Rook or Pawn is always sufficient
+        if (pieces.some(p => p instanceof Queen || p instanceof Rook || p instanceof Pawn)) {
+            return true;
+        }
+
+        const bishops = pieces.filter(p => p instanceof Bishop);
+        const knights = pieces.filter(p => p instanceof Knight);
+
+        // Two bishops, or one bishop and one knight is sufficient
+        if (bishops.length >= 2 || (bishops.length >= 1 && knights.length >= 1)) {
+            return true;
+        }
+        
+        // Two knights is also sufficient against a lone king
+        if (knights.length >= 2) {
+            return true;
+        }
+
+        return false;
     }
 
     private updateGameState(): void {
@@ -50,9 +118,11 @@ export default class Game {
             if (kingInCheck) {
                 this._gameState = GameState.win;
                 this.winner = !this._turn; // The other player wins
+                this.gameEndReason = 'checkmate';
             } else {
                 this._gameState = GameState.tie;
                 this.winner = null;
+                this.gameEndReason = 'stalemate';
             }
         } else {
             this._gameState = GameState.running;
