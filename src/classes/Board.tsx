@@ -6,6 +6,7 @@ export default class Board {
     readonly tiles: Tile[][] = [];
     readonly pieceList: Piece[] = [];
     public enPassantTile: Tile | null = null;
+    public enPassantColor : boolean | null = null;
 
     constructor(readonly size: number) {
         for(let y = 0; y < size; y++) {

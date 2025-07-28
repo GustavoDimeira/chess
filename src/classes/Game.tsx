@@ -1,11 +1,7 @@
 import Board from "./Board";
 import Piece from "./Piece";
-import Bishop from "./pieces/Bishop";
 import King from "./pieces/King";
-import Knight from "./pieces/Knight";
 import Pawn from "./pieces/Pawn";
-import Queen from "./pieces/Queen";
-import Rook from "./pieces/Rook";
 import Pos from "./Pos";
 import Tile from "./Tile";
 
@@ -22,19 +18,19 @@ export default class Game {
     constructor(
         readonly board: Board,
         public timer: [number, number],
-        readonly playerColor: boolean
-    ) { }
+        public playerColor: boolean
+    ) {}
 
     get turn(): boolean {
         return this._turn;
     }
 
     get gameState(): states {
-        return this.gameState
+        return this._gameState;
     }
 
     private validateState() {
-        // todo
+        
     }
 
     public addPiece(piece: Piece, position: Pos | null = null): boolean {
@@ -108,6 +104,7 @@ export default class Game {
                 piece.position.y + direction,
                 piece.position.x
             ));
+            this.board.enPassantColor = piece.color;
         } else {
             // Verifica se o movimento atual foi uma captura por en passant
             if (
@@ -123,6 +120,7 @@ export default class Game {
             }
 
             this.board.enPassantTile = null;
+            this.board.enPassantColor = null;
         }
     }
 
@@ -207,6 +205,7 @@ export default class Game {
             this.validateEnPassant(piece, destination);
         } else {
             this.board.enPassantTile = null;
+            this.board.enPassantColor = null;
         }
 
         // mover a peça

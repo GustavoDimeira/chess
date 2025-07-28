@@ -27,14 +27,14 @@ export default class Pawn extends Piece {
 
         if (attack1) {
             attackTiles.push(attack1);
-            if ((attack1.occupiedBy && attack1.occupiedBy.color !== this.color) || board.enPassantTile?.position === attack1.position) {
+            if ((attack1.occupiedBy && attack1.occupiedBy.color !== this.color) || (board.enPassantTile?.position === attack1.position && board.enPassantColor !== this.color)) {
                 avaliableTiles.push(attack1);
             }
         }
 
         if (attack2) {
             attackTiles.push(attack2);
-            if ((attack2.occupiedBy && attack2.occupiedBy.color !== this.color) || board.enPassantTile?.position === attack2.position) {
+            if ((attack2.occupiedBy && attack2.occupiedBy.color !== this.color) || (board.enPassantTile?.position === attack2.position && board.enPassantColor !== this.color)) {
                 avaliableTiles.push(attack2);
             }
         }

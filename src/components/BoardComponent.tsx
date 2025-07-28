@@ -27,10 +27,8 @@ export default ({ tileSize }: BoardComponentProps) => {
 
             if (hasMoved) {
                 updateSelected(null);
-            } else if (tile.occupiedBy) {
-                updateSelected(tile.occupiedBy);
             } else {
-                updateSelected(null);
+                updateSelected(tile.occupiedBy);
             }
 
             updateBoard([...game.board.tiles]);
@@ -49,22 +47,38 @@ export default ({ tileSize }: BoardComponentProps) => {
                 gridTemplateColumns: `repeat(8, ${tileSize}px)`,
                 gridTemplateRows: `repeat(8, ${tileSize}px)`,
             }}>
-                {board.flat().map((tile, index) => {
-                    const tileColorClass = (Math.floor(index / 8) + index % 8) % 2 === 0 ? 'light' : 'dark';
+                {(game.playerColor
+                    ? board.flat()
+                    : board.slice().reverse().flatMap(row => row.slice().reverse())
+                ).map((tile, index) => {
+                    const tileColorClass =
+                        (Math.floor(index / 8) + index % 8) % 2 === 0 ? 'light' : 'dark';
                     const isCapture = tile.highLighted && tile.occupiedBy;
                     return (
                         <div
                             key={index}
                             className={`tile ${tileColorClass} ${isCapture ? 'capture-highlight' : ''}`}
-                            onDragOver={(event) => event.preventDefault()}
+                            onDragOver={(event) => {
+                                event.preventDefault();
+                                console.log(tile.position);
+                            }}
                             onDrop={() => handleTileClick(tile)}
                             onClick={() => handleTileClick(tile)}
                             style={{ width: tileSize, height: tileSize }}
                         >
-                            {tile.highLighted && !tile.occupiedBy && <div className="highlight-dot" style={{ width: tileSize * 0.25, height: tileSize * 0.25 }}></div>}
+                            {tile.highLighted && !tile.occupiedBy && (
+                                <div
+                                    className="highlight-dot"
+                                    style={{
+                                        width: tileSize * 0.25,
+                                        height: tileSize * 0.25,
+                                    }}
+                                ></div>
+                            )}
                         </div>
                     );
                 })}
+
             </div>
             <div className="piece-container">
                 {game.board.pieceList.map(piece => (
@@ -72,7 +86,9 @@ export default ({ tileSize }: BoardComponentProps) => {
                         key={piece.ID}
                         className="piece-wrapper"
                         style={{
-                            transform: `translate(${piece.position.x * tileSize}px, ${piece.position.y * tileSize}px)`,
+                            transform: `translate(${(game.playerColor === false ? 7 - piece.position.x : piece.position.x) * tileSize
+                                }px, ${(game.playerColor === false ? 7 - piece.position.y : piece.position.y) * tileSize
+                                }px)`,
                             width: tileSize,
                             height: tileSize,
                         }}
@@ -87,6 +103,7 @@ export default ({ tileSize }: BoardComponentProps) => {
                         />
                     </div>
                 ))}
+
             </div>
         </div>
     );

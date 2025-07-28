@@ -28,11 +28,10 @@ function App() {
   };
 
   const isPortrait = screenHeight > screenWidth;
-  const isSmallScreen = screenWidth < 1000; // Your existing breakpoint
+  const isSmallScreen = screenWidth < 1000;
 
   // Calculate effective available viewport dimensions for the board
   const appPadding = 20; // From App.css padding
-  const boardBorder = 5; // From App.css board-container border
   const effectiveViewportWidth = screenWidth - (2 * appPadding);
   const effectiveViewportHeight = screenHeight - (2 * appPadding);
 

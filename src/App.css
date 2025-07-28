@@ -6,7 +6,6 @@
   min-height: 100vh;
   width: 100%; /* Make the app take full width */
   background: linear-gradient(to bottom right, #3a3a3a, #1a1a1a); /* Dark gradient background */
-  padding: 20px; /* Add some padding around the content */
   box-sizing: border-box; /* Include padding in width/height */
   position: relative; /* For positioning the toggle button */
 }
@@ -83,7 +82,7 @@
 }
 
 .piece.dragging {
-  opacity: 0.5;
+  opacity: 0.8;
 }
 
 .piece.white-piece {
@@ -106,6 +105,8 @@
   border-radius: 8px;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.4); /* Shadow for depth */
   transition: transform 0.3s ease-in-out; /* For slide-in/out animation */
+
+  z-index: 999;
 }
 
 .timers {
@@ -119,7 +120,7 @@
   background-color: #3b3b3b;
   padding: 12px 15px;
   border-radius: 6px;
-  min-width: 80px;
+  min-width: 40px;
   text-align: center;
 }
 
@@ -160,15 +161,13 @@
   padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
-  z-index: 1000; /* Ensure it's above other content */
+  z-index: 998; /* Ensure it's below other content */
 }
 
 /* Media Queries for Responsiveness */
 @media (max-width: 1000px) {
   .App {
     flex-direction: column; /* Stack items vertically */
-    justify-content: flex-start; /* Align to top */
-    padding-top: 60px; /* Make space for the toggle button */
     align-items: center; /* Center items horizontally when stacked */
   }
 
@@ -177,7 +176,7 @@
     top: 0;
     right: 0;
     height: 100vh;
-    width: 300px; /* Fixed width for overlay */
+    width: 35vw; /* Fixed width for overlay */
     margin-left: 0;
     transform: translateX(100%); /* Start off-screen */
     z-index: 999; /* Appear above the board */
@@ -204,7 +203,6 @@
 @media (orientation: portrait) and (max-width: 1000px) {
   .App {
     flex-direction: column; /* Stack items vertically */
-    justify-content: flex-start; /* Align to top */
     align-items: center; /* Center items horizontally */
   }
 
@@ -225,13 +223,14 @@
     flex-direction: column; /* Stack main sections vertically */
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: 80%;
+    padding: 10px;
     box-sizing: border-box;
   }
 
   .portrait-timers-wrapper {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     margin: 1vmin;
   }
 
@@ -243,7 +242,7 @@
   }
 
   .portrait-content {
-    width: 75%;
+    width: 50vmin;
   }
 
   .portrait-bottom-section {
@@ -269,7 +268,7 @@
     display: flex;
     flex-direction: column; /* Stack buttons vertically */
     justify-content: flex-start; /* Align buttons to the top */
-    min-width: 80px; /* Ensure buttons have enough space */
+    min-width: 70px; /* Ensure buttons have enough space */
     height: 100%; /* Take full height of parent (portrait-bottom-section) */
     box-sizing: border-box; /* Ensure padding/border are included */
   }

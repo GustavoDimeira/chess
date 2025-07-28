@@ -42,4 +42,6 @@ initialPieces.forEach(piece => game.addPiece(piece));
 // Atualiza movimentos disponíveis de todas as peças
 game.board.pieceList.forEach(piece => piece.getAvaliableMoves(game.board));
 
+game.playerColor = true;
+
 export default game;
