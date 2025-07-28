@@ -36,7 +36,7 @@ export default abstract class Piece {
         return this._icon;
     }
 
-    public getAvaliableMoves(board: Board): boolean {
+    public getAvaliableMoves(board: Board, turn: boolean): boolean {
         this.blockeableTiles = [];
         this._attakedTiles.forEach((tile) => {
             const index = tile.attakedBy.findIndex(p => p.ID === this.ID);
@@ -45,8 +45,8 @@ export default abstract class Piece {
             }
         });
 
-
         [this._avaliableMoves, this._attakedTiles] =  this.calculateMoves(board);
+        if (turn !== this.color) this._avaliableMoves = [];
 
         this._attakedTiles.forEach((tile) => tile.attakedBy.push(this));
 

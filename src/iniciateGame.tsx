@@ -25,6 +25,7 @@ const initialPieces = [
   ...Array.from({ length: 8 }, (_, i) => new Pawn(new Pos(1, i), false)),
 
   // Peças brancas
+  ...Array.from({ length: 8 }, (_, i) => new Pawn(new Pos(6, i), true)),
   new Rook(new Pos(7, 0), true),
   new Knight(new Pos(7, 1), true),
   new Bishop(new Pos(7, 2), true),
@@ -33,14 +34,13 @@ const initialPieces = [
   new Bishop(new Pos(7, 5), true),
   new Knight(new Pos(7, 6), true),
   new Rook(new Pos(7, 7), true),
-  ...Array.from({ length: 8 }, (_, i) => new Pawn(new Pos(6, i), true)),
 ];
 
 // Adiciona todas as peças no jogo
 initialPieces.forEach(piece => game.addPiece(piece));
 
 // Atualiza movimentos disponíveis de todas as peças
-game.board.pieceList.forEach(piece => piece.getAvaliableMoves(game.board));
+game.board.pieceList.forEach(piece => piece.getAvaliableMoves(game.board, game.turn));
 
 game.playerColor = true;
 

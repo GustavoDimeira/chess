@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import PieceComponent from '../components/PieceComponent';
+import GameStatusPopup from './GameStatusPopup'; // Importar o pop-up
 
 import game from '../iniciateGame';
 import Tile from '../classes/Tile';
 import Piece from '../classes/Piece';
+import { GameState } from '../classes/Game'; // Importar o GameState
 
 type BoardComponentProps = {
     tileSize: number;
@@ -12,23 +14,36 @@ type BoardComponentProps = {
 export default ({ tileSize }: BoardComponentProps) => {
     const [board, updateBoard] = useState(game.board.tiles);
     const [selectedPiece, updateSelected] = useState<Piece | null>(null);
+    // Adicionar estado para o gameState para forçar a re-renderização
+    const [gameState, setGameState] = useState<GameState>(game.gameState);
 
     useEffect(() => {
         game.board.tiles.forEach(line => line.forEach(tile => tile.highLighted = false));
 
-        selectedPiece?.avaliableMoves.forEach(tile => tile.highLighted = true);
+        if (selectedPiece?.color === game.turn) {
+            selectedPiece?.avaliableMoves.forEach(tile => tile.highLighted = true);
+        }
 
         updateBoard([...game.board.tiles]);
-    }, [selectedPiece]);
+    }, [selectedPiece, game.turn]);
 
     const handleTileClick = (tile: Tile) => {
+        if (gameState !== GameState.running) return; // Bloquear cliques se o jogo acabou
+
         if (selectedPiece) {
             const hasMoved = game.movePiece(selectedPiece, tile.position);
 
             if (hasMoved) {
                 updateSelected(null);
+                setGameState(game.gameState); // Atualizar o estado do jogo
             } else {
-                updateSelected(tile.occupiedBy);
+                // Se o clique não foi um movimento válido, 
+                // atualiza a seleção para a peça no tile clicado (se houver)
+                if (tile.occupiedBy && tile.occupiedBy.color === game.turn) {
+                    updateSelected(tile.occupiedBy);
+                } else {
+                    updateSelected(null);
+                }
             }
 
             updateBoard([...game.board.tiles]);
@@ -36,13 +51,24 @@ export default ({ tileSize }: BoardComponentProps) => {
             return;
         }
 
-        if (tile.occupiedBy) {
+        if (tile.occupiedBy && tile.occupiedBy.color === game.turn) {
             updateSelected(tile.occupiedBy);
         }
     };
 
+    const handleResetGame = () => {
+        window.location.reload(); // A forma mais simples de reiniciar com a estrutura atual
+    };
+
     return (
         <div className="board-wrapper" style={{ width: tileSize * 8, height: tileSize * 8 }}>
+            {gameState !== GameState.running && (
+                <GameStatusPopup 
+                    gameState={gameState} 
+                    winner={game.winner}
+                    onReset={handleResetGame} 
+                />
+            )}
             <div className="board-container" style={{
                 gridTemplateColumns: `repeat(8, ${tileSize}px)`,
                 gridTemplateRows: `repeat(8, ${tileSize}px)`,
@@ -60,7 +86,6 @@ export default ({ tileSize }: BoardComponentProps) => {
                             className={`tile ${tileColorClass} ${isCapture ? 'capture-highlight' : ''}`}
                             onDragOver={(event) => {
                                 event.preventDefault();
-                                console.log(tile.position);
                             }}
                             onDrop={() => handleTileClick(tile)}
                             onClick={() => handleTileClick(tile)}
@@ -91,6 +116,7 @@ export default ({ tileSize }: BoardComponentProps) => {
                                 }px)`,
                             width: tileSize,
                             height: tileSize,
+                            pointerEvents: gameState !== GameState.running ? 'none' : 'auto',
                         }}
                         onDragOver={(event) => event.preventDefault()}
                         onClick={() => handleTileClick(game.board.getTile(piece))}

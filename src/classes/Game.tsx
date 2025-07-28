@@ -5,32 +5,58 @@ import Pawn from "./pieces/Pawn";
 import Pos from "./Pos";
 import Tile from "./Tile";
 
-enum states {
-    "inicial", "running", "tie", "win", "loss"
+export enum GameState {
+    inicial, running, tie, win
 }
 
-
 export default class Game {
-    // readonly pieceList: Piece[] = [];
     private _turn: boolean = true;
-    private _gameState: states = states.inicial;
+    private _gameState: GameState = GameState.inicial;
+    public winner: boolean | null = null; // true for white, false for black
 
     constructor(
         readonly board: Board,
         public timer: [number, number],
         public playerColor: boolean
-    ) {}
+    ) {
+        this._gameState = GameState.running;
+    }
 
     get turn(): boolean {
         return this._turn;
     }
 
-    get gameState(): states {
+    get gameState(): GameState {
         return this._gameState;
     }
 
-    private validateState() {
-        
+    private updateGameState(): void {
+        const kings = this.board.pieceList.filter(p => p instanceof King);
+        const king = kings.find(k => k.color === this._turn);
+        if (!king) return; // Should not happen
+
+        const kingTile = this.board.getTile(king);
+        const kingInCheck = kingTile.attackedByEnemies(this._turn).length > 0;
+
+        let hasLegalMoves = false;
+        for (const piece of this.board.pieceList) {
+            if (piece.color === this._turn && piece.avaliableMoves.length > 0) {
+                hasLegalMoves = true;
+                break;
+            }
+        }
+
+        if (!hasLegalMoves) {
+            if (kingInCheck) {
+                this._gameState = GameState.win;
+                this.winner = !this._turn; // The other player wins
+            } else {
+                this._gameState = GameState.tie;
+                this.winner = null;
+            }
+        } else {
+            this._gameState = GameState.running;
+        }
     }
 
     public addPiece(piece: Piece, position: Pos | null = null): boolean {
@@ -214,19 +240,19 @@ export default class Game {
         piece.position = destination;
         piece.isFirstMove = false;
 
+        this._turn = !this._turn;
+
         // Atualiza todos as peças
-        this.board.pieceList.forEach((p) => p.getAvaliableMoves(this.board));
+        this.board.pieceList.forEach((p) => p.getAvaliableMoves(this.board, this._turn));
 
         // Recalcula também os reis para garantir consistencia
         const kings: Piece[] = this.board.pieceList.filter((p) => p instanceof King);
-        kings.forEach((king) => king.getAvaliableMoves(this.board));
+        kings.forEach((king) => king.getAvaliableMoves(this.board, this._turn));
 
         this.validateCheck(kings);
 
-        this.validateState();
+        this.updateGameState();
 
-        this._turn = !this._turn;
         return true;
     }
-
 }
