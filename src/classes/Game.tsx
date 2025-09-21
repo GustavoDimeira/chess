@@ -89,7 +89,7 @@ export default class Game {
         if (bishops.length >= 2 || (bishops.length >= 1 && knights.length >= 1)) {
             return true;
         }
-        
+
         // Two knights is also sufficient against a lone king
         if (knights.length >= 2) {
             return true;
@@ -287,12 +287,64 @@ export default class Game {
             }
         });
     }
+    
+    private getNotation(attacker: Piece, attacked: Piece | null, attacked_tile: Tile): string {
+        let finalString = "";
 
-    public movePiece(piece: Piece, destination: Pos): boolean {
+        const file = String.fromCharCode("a".charCodeAt(0) + attacker.position.x);
+        const rank = (8 - attacker.position.y).toString();
+
+        // atacantes do mesmo tipo e cor que podem ir para esse tile
+        const sameTypeAttackers = attacked_tile.attakedBy.filter(
+            a => a.symbol === attacker.symbol && a.color === attacker.color
+        );
+
+        // Símbolo da peça (peão não mostra símbolo)
+        if (attacker.symbol !== "P") {
+            finalString += attacker.symbol;
+        }
+
+        // --- Regras de desambiguação ---
+        if (attacked && attacker.symbol === "P") {
+            // Regra importante: quando PEÃO captura, sempre mostrar a coluna de origem (ex: exd5)
+            finalString += file;
+        } else if (sameTypeAttackers.length > 1) {
+            // existem outras peças iguais que também atacam → precisamos desambiguar
+            const others = sameTypeAttackers.filter(a => a !== attacker);
+            const anySameFile = others.some(a => a.position.x === attacker.position.x);
+            const anySameRank = others.some(a => a.position.y === attacker.position.y);
+
+            if (!anySameFile) {
+                // nenhum outro compartilha a mesma coluna → coluna é suficiente
+                finalString += file;
+            } else if (!anySameRank) {
+                // nenhum outro compartilha a mesma linha → linha é suficiente
+                finalString += rank;
+            } else {
+                // ainda ambíguo → coluna + linha
+                finalString += file + rank;
+            }
+        }
+
+        // Captura
+        if (attacked) finalString += "x";
+
+        // Destino
+        finalString += String.fromCharCode("a".charCodeAt(0) + attacked_tile.position.x);
+        finalString += (8 - attacked_tile.position.y).toString();
+
+        return finalString;
+    }
+
+    public movePiece(piece: Piece, destination: Pos): string | boolean {
+        if (!piece.avaliableMoves.find((move) => move.position.equals(destination))) return false;
+
         const tile_target = piece.avaliableMoves.find((tile) => tile.position.equals(destination));
         const prev_tile = this.board.getTile(piece);
 
         if (!tile_target) return false;
+
+        var notation = this.getNotation(piece, tile_target.occupiedBy, this.board.getTile(destination) as Tile); // confia
 
         if (tile_target.occupiedBy) this.removePiece(tile_target);
 
@@ -323,6 +375,6 @@ export default class Game {
 
         this.updateGameState();
 
-        return true;
+        return notation;
     }
 }

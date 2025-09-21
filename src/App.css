@@ -131,12 +131,27 @@
 }
 
 .moves-history {
+  display: flex;
+  flex-direction: row;
   background-color: #3b3b3b;
   height: 40vh;
   margin-bottom: 25px;
   border-radius: 6px;
   padding: 10px;
   overflow-y: auto; /* Enable scrolling for move history */
+}
+
+.moves-history div {
+  width: 45%;
+  padding: 1vw;
+  border-left: white 1px solid;
+  margin-bottom: 5%;
+  height: fit-content;
+  min-height: 80%;
+}
+
+.move-team {
+  border-bottom: 1px white solid
 }
 
 .action-button {

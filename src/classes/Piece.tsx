@@ -14,6 +14,8 @@ export default abstract class Piece {
     public pinned: boolean = false;
     public pinnedOptions: Tile[] = [];
     public blockeableTiles: Tile[] = [];
+
+    abstract readonly symbol: string;
     
     constructor(
         public position: Pos,

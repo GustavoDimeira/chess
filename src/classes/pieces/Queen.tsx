@@ -7,10 +7,11 @@ export default class Queen extends Piece {
     constructor(
         readonly position: Pos,
         readonly color: boolean,
+        readonly symbol: string = "Q"
     ) {
         super(position, color);
 
-        this._icon = "♛"; // Changed to filled icon
+        this._icon = "♛";
     };
 
     protected calculateMoves(board: Board): [Tile[], Tile[]] {

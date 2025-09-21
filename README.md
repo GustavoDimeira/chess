@@ -101,7 +101,7 @@ chess/
 ## Future Enhancements
 
 -   **Game Over Conditions:** Implement checkmate, stalemate, and draw conditions. ✅
--   **Move History:** Display a detailed history of moves.
+-   **Move History:** Display a detailed history of moves. ✅
 -   **Timers:** Fully functional game timers for each player. ✅
 -   **Promotion:** Implement pawn promotion to other pieces.
 -   **Undo/Redo Moves:** Add functionality to revert or reapply moves.

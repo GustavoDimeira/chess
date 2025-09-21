@@ -8,12 +8,13 @@ export default class Pawn extends Piece {
 
     constructor(
        readonly position: Pos,
-       readonly color: boolean
+       readonly color: boolean,
+       readonly symbol: string = "P"
     ) {
         super(position, color);
 
         this.direction = this.color ? -1 : 1;
-        this._icon = "♟"; // Changed to filled icon
+        this._icon = "♟";
     }
 
     protected calculateMoves(board: Board): [Tile[], Tile[]] {

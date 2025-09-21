@@ -6,6 +6,7 @@ type SideInfosProps = {
     toggleSideInfos: () => void;
     screenWidth: number;
     isPortrait: boolean;
+    moveHistory: string[];
 };
 
 const formatTime = (timeInSeconds: number) => {
@@ -14,7 +15,7 @@ const formatTime = (timeInSeconds: number) => {
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 };
 
-export default ({ isSideInfosOpen, toggleSideInfos, screenWidth, isPortrait }: SideInfosProps) => {
+export default ({ isSideInfosOpen, toggleSideInfos, screenWidth, isPortrait, moveHistory }: SideInfosProps) => {
     const isMobile = screenWidth < 1000;
     const [timers, setTimers] = useState(game.timer);
 
@@ -54,7 +55,18 @@ export default ({ isSideInfosOpen, toggleSideInfos, screenWidth, isPortrait }: S
                     </div>
                     <div className="portrait-bottom-section">
                         <div className="moves-history portrait-moves-history">
-                            {/* Moves will be added here */}
+                            <div className='w_moves'>
+                                <p className='move-team'>White:</p>
+                                {
+                                    moveHistory.map((move, i) => i % 2 == 0 ? <p className='move-str' key={`move_str_${i}`}>{move}</p> : null)
+                                }
+                            </div>
+                            <div className='b_moves'>
+                                <p className='move-team'>Black:</p>
+                                {
+                                    moveHistory.map((move, i) => i % 2 != 0 ? <p className='move-str' key={`move_str_${i}`}>{move}</p> : null)
+                                }
+                            </div>
                         </div>
                         <div className="portrait-actions-wrapper">
                             <button className="action-button">Resign</button>
@@ -69,7 +81,18 @@ export default ({ isSideInfosOpen, toggleSideInfos, screenWidth, isPortrait }: S
                         <div className={`timer ${game.turn === true ? 'active' : ''}`}>{bottomTimer}</div>
                     </div>
                     <div className="moves-history">
-                        {/* Moves will be added here */}
+                            <div className='w_moves'>
+                                <p className='move-team'>White:</p>
+                                {
+                                    moveHistory.map((move, i) => i % 2 == 0 ? <p className='move-str' key={`move_str_${i}`}>{move}</p> : null)
+                                }
+                            </div>
+                            <div className='b_moves'>
+                                <p className='move-team'>Black:</p>
+                                {
+                                    moveHistory.map((move, i) => i % 2 != 0 ? <p className='move-str' key={`move_str_${i}`}>{move}</p> : null)
+                                }
+                            </div>
                     </div>
                     <div className="actions">
                         <button className="action-button">Resign</button>

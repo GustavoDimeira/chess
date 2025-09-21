@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, SetStateAction, Dispatch } from 'react';
 import PieceComponent from '../components/PieceComponent';
 import GameStatusPopup from './GameStatusPopup'; // Importar o pop-up
 
@@ -9,9 +9,10 @@ import { GameState } from '../classes/Game'; // Importar o GameState
 
 type BoardComponentProps = {
     tileSize: number;
+    updateHistory: Dispatch<SetStateAction<string[]>>
 };
 
-export default ({ tileSize }: BoardComponentProps) => {
+export default ({ tileSize, updateHistory }: BoardComponentProps) => {
     const [board, updateBoard] = useState(game.board.tiles);
     const [selectedPiece, updateSelected] = useState<Piece | null>(null);
     // Adicionar estado para o gameState para forçar a re-renderização
@@ -43,9 +44,11 @@ export default ({ tileSize }: BoardComponentProps) => {
         if (selectedPiece) {
             const hasMoved = game.movePiece(selectedPiece, tile.position);
 
-            if (hasMoved) {
+            if (typeof hasMoved == "string") {
                 updateSelected(null);
                 setGameState(game.gameState); // Atualizar o estado do jogo
+
+                updateHistory((prev) => [...prev, hasMoved]);
             } else {
                 // Se o clique não foi um movimento válido, 
                 // atualiza a seleção para a peça no tile clicado (se houver)
@@ -73,11 +76,11 @@ export default ({ tileSize }: BoardComponentProps) => {
     return (
         <div className="board-wrapper" style={{ width: tileSize * 8, height: tileSize * 8 }}>
             {gameState !== GameState.running && (
-                <GameStatusPopup 
-                    gameState={gameState} 
+                <GameStatusPopup
+                    gameState={gameState}
                     winner={game.winner}
                     endReason={game.gameEndReason}
-                    onReset={handleResetGame} 
+                    onReset={handleResetGame}
                 />
             )}
             <div className="board-container" style={{

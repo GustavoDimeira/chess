@@ -10,6 +10,7 @@ function App() {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [screenHeight, setScreenHeight] = useState(window.innerHeight);
   const [isSideInfosOpen, setIsSideInfosOpen] = useState(false);
+  const [moveHistory, updateHistory] = useState<string[]>([]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -59,12 +60,16 @@ function App() {
 
   return (
     <div className="App">
-      <BoardComponent tileSize={calculatedTileSize} />
+      <BoardComponent 
+        tileSize={calculatedTileSize}
+        updateHistory={updateHistory}
+       />
       <SideInfos
         isSideInfosOpen={isSideInfosOpen}
         toggleSideInfos={toggleSideInfos}
         screenWidth={screenWidth}
         isPortrait={isPortrait}
+        moveHistory={moveHistory}
       />
       {isSmallScreen && !isPortrait && ( // Show toggle button only on small screens in landscape
         <button className="toggle-side-infos" onClick={toggleSideInfos}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { GameState, GameEndReason } from '../classes/Game'; // Importar o enum
+import { GameState, GameEndReason } from '../classes/Game';
 import './GameStatusPopup.css';
 
 interface GameStatusPopupProps {

@@ -9,7 +9,7 @@ import Pawn from "./classes/pieces/Pawn";
 import Pos from "./classes/Pos";
 
 const board = new Board(8);
-const game = new Game(board, [10, 10], true);
+const game = new Game(board, [1000, 1000], true);
 
 // Setup inicial padrão de xadrez
 const initialPieces = [
