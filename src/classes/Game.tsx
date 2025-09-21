@@ -10,6 +10,8 @@ import Knight from "./pieces/Knight";
 import Queen from "./pieces/Queen";
 import Rook from "./pieces/Rook";
 
+export type PieceClass = typeof Queen | typeof Rook | typeof Knight | typeof Bishop;
+
 export enum GameState {
     inicial, running, tie, win
 }
@@ -22,11 +24,11 @@ export default class Game {
     public winner: boolean | null = null; // true for white, false for black
     public gameEndReason: GameEndReason | null = null;
     private timerInterval: NodeJS.Timeout | null = null;
-    private _promoting: boolean = false;
+    private _promoting: Piece | null = null;
 
     constructor(
         readonly board: Board,
-        public timer: [number, number], // [whiteTime, blackTime] in seconds
+        public timer: [number, number],
         public playerColor: boolean
     ) {
         this._gameState = GameState.running;
@@ -41,7 +43,7 @@ export default class Game {
         return this._gameState;
     }
 
-    get promoting(): boolean {
+    get promoting(): Piece | null {
         return this._promoting;
     }
 
@@ -337,18 +339,34 @@ export default class Game {
     private checkPromotion(piece: Piece): void {
         if (piece instanceof Pawn) {
             if (piece.position.y == 7 || piece.position.y == 0) {
-                this._promoting = true
+                this._promoting = piece
             }
         }
     }
 
-    public promote(piece: Piece): void {
+    public promote(pieceClass: PieceClass): void {
         if (this._promoting) {
-            this.removePiece(piece);
-            this.addPiece(new Queen(piece.position, piece.color));
+            const pawn = this._promoting;
+            this.removePiece(pawn);
+            this.addPiece(new pieceClass(pawn.position, pawn.color));
 
-            this._promoting = false;
+            this._promoting = null;
         }
+
+        this.recalculateMoves();
+    }
+
+    private recalculateMoves() {
+        // Atualiza todos as peças
+        this.board.pieceList.forEach((p) => p.getAvaliableMoves(this.board, this._turn));
+
+        // Recalcula também os reis para garantir consistencia
+        const kings: Piece[] = this.board.pieceList.filter((p) => p instanceof King);
+        kings.forEach((king) => king.getAvaliableMoves(this.board, this._turn));
+
+        this.validateCheck(kings);
+
+        this.updateGameState();
     }
 
     public movePiece(piece: Piece, destination: Pos): string | boolean {
@@ -381,16 +399,7 @@ export default class Game {
 
         this._turn = !this._turn;
 
-        // Atualiza todos as peças
-        this.board.pieceList.forEach((p) => p.getAvaliableMoves(this.board, this._turn));
-
-        // Recalcula também os reis para garantir consistencia
-        const kings: Piece[] = this.board.pieceList.filter((p) => p instanceof King);
-        kings.forEach((king) => king.getAvaliableMoves(this.board, this._turn));
-
-        this.validateCheck(kings);
-
-        this.updateGameState();
+        this.recalculateMoves();
 
         return notation;
     }

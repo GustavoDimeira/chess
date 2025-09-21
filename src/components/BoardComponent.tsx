@@ -18,6 +18,7 @@ export default ({ tileSize, updateHistory }: BoardComponentProps) => {
     const [selectedPiece, updateSelected] = useState<Piece | null>(null);
     // Adicionar estado para o gameState para forçar a re-renderização
     const [gameState, setGameState] = useState<GameState>(game.gameState);
+    const [promoting, updatePromoting] = useState(game.promoting);
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -61,10 +62,11 @@ export default ({ tileSize, updateHistory }: BoardComponentProps) => {
             }
 
             updateBoard([...game.board.tiles]);
+            updatePromoting(game.promoting);
 
             return;
-        }
-
+        } 
+        
         if (tile.occupiedBy && tile.occupiedBy.color === game.turn) {
             updateSelected(tile.occupiedBy);
         }
@@ -84,10 +86,11 @@ export default ({ tileSize, updateHistory }: BoardComponentProps) => {
                     onReset={handleResetGame}
                 />
             )}
-            {game.promoting ? (
+            {promoting ? (
                 <PromotionPopUp
-                    tileSize={tileSize * 1.5}
+                    tileSize={tileSize * 1.15}
                     color={!game.turn}
+                    game={game}                    updatePromoting={updatePromoting}
                 />
             ) : (
             <div className="board-container" style={{

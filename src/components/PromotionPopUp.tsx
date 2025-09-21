@@ -1,68 +1,74 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Board from "../classes/Board"
 import Queen from "../classes/pieces/Queen";
 import Pos from "../classes/Pos";
 import Rook from "../classes/pieces/Rook";
 import Knight from "../classes/pieces/Knight";
 import Bishop from "../classes/pieces/Bishop";
-import Game from "../classes/Game";
+import Game, { PieceClass } from "../classes/Game";
 import PieceComponent from "./PieceComponent";
 import Tile from "../classes/Tile";
+import "./PromotionPopUp.css";
+import Piece from "../classes/Piece";
 
 type promotionPopUpProp = {
     color: boolean,
     tileSize: number
+    game: Game,
+    updatePromoting: Dispatch<SetStateAction<Piece | null>>
 }
 
-const board = new Board(4, 1);
+const initial_board = new Board(1, 4);
 
-const queen = new Queen(new Pos(0, 0), true);
-const rook = new Rook(new Pos(1, 0), true);
-const knight = new Knight(new Pos(2, 0), true);
-const bishop = new Bishop(new Pos(3, 0), true);
+export default ({ color, tileSize, game, updatePromoting }: promotionPopUpProp) => {
+    const [board, updateBoard] = useState<Tile[][]>(initial_board.tiles);
+    const [pieces, setPieces] = useState<Piece[]>([]);
+    const [pieceClasses, setPieceClasses] = useState<PieceClass[]>([]);
 
-const game_a = new Game(board, [0, 0], true);
+    useEffect(() => {
+        const board = new Board(1, 4);
+        const pieceClasses = [Queen, Rook, Knight, Bishop];
+        const pieces = [
+            new Queen(new Pos(0, 0), color),
+            new Rook(new Pos(0, 1), color),
+            new Knight(new Pos(0, 2), color),
+            new Bishop(new Pos(0, 3), color)
+        ];
 
-game_a.addPiece(queen);
-game_a.addPiece(rook);
-game_a.addPiece(knight);
-game_a.addPiece(bishop);
+        pieces.forEach(p => board.getTile(p).occupiedBy = p);
 
-export default ({ color, tileSize }: promotionPopUpProp) => {
-    const [board, updateBoard] = useState<Tile[][]>(game_a.board.tiles);
-    const [game, updateGame] = useState<Game>(game_a);
+        updateBoard(board.tiles);
+        setPieces(pieces);
+        setPieceClasses(pieceClasses);
+    }, [color]);
+
+    const handlePromote = (index: number) => {
+        game.promote(pieceClasses[index]);
+        updatePromoting(null);
+    }
 
     return (
         <div
             id="promotion-popup"
         >
             <div className="board-container" style={{
-                gridTemplateColumns: `repeat(8, ${tileSize}px)`,
-                gridTemplateRows: `repeat(8, ${tileSize}px)`,
+                gridTemplateColumns: `repeat(4, ${tileSize}px)`,
+                gridTemplateRows: `repeat(1, ${tileSize}px)`,
             }}>
                 {
                     board.map((line, line_i) => {
                         return (
-                            <div key={line_i}>
+                            <div key={line_i} className="line">
                                 {line.map((tile, index) => {
                                     const tileColorClass =
-                                        (index % 2 === 0) ? 'light' : 'dark';
+                                        (tile.position.x % 2 === 0) ? 'light' : 'dark';
                                     return (
                                         <div
                                             key={index}
                                             className={`tile ${tileColorClass}`}
                                             style={{ width: tileSize, height: tileSize }}
-                                        >
-                                            {tile.highLighted && !tile.occupiedBy && (
-                                                <div
-                                                    className="highlight-dot"
-                                                    style={{
-                                                        width: tileSize * 0.25,
-                                                        height: tileSize * 0.25,
-                                                    }}
-                                                ></div>
-                                            )}
-                                        </div>
+                                            onClick={() => handlePromote(index)}
+                                        />
                                     );
                                 })}
                             </div>
@@ -70,20 +76,18 @@ export default ({ color, tileSize }: promotionPopUpProp) => {
                     })
 
                 }
-
             </div>
             <div className="piece-container">
-                {game.board.pieceList.map(piece => (
+                {pieces.map((piece, index) => (
                     <div
                         key={piece.ID}
                         className="piece-wrapper"
                         style={{
-                            transform: `translate(${(game.playerColor === false ? 4 - piece.position.y : piece.position.y) * tileSize
-                                }px, ${(game.playerColor === false ? 4 - piece.position.x : piece.position.x) * tileSize
-                                }px)`,
+                            transform: `translate(${piece.position.x * tileSize}px, ${piece.position.y * tileSize}px)`,
                             width: tileSize,
                             height: tileSize,
                         }}
+                        onClick={() => handlePromote(index)}
                     >
                         <PieceComponent
                             piece={piece}
