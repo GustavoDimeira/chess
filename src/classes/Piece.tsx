@@ -1,5 +1,4 @@
 import Board from "./Board";
-import King from "./pieces/King";
 import Pos from "./Pos";
 import Tile from "./Tile";
 
@@ -84,7 +83,7 @@ export default abstract class Piece {
                     if (targetPiece.color !== color) {
                         if (!firstPiece) newAvaliableDirection.push(tile);
 
-                        if (targetPiece instanceof King) {
+                        if (targetPiece.symbol == "K") {
                             if (firstPiece) {
                                 // A peça entre o rei e essa está pinada
                                 firstPiece.pinned = true;

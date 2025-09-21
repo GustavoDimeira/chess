@@ -1,11 +1,12 @@
 import { useState, useEffect, SetStateAction, Dispatch } from 'react';
 import PieceComponent from '../components/PieceComponent';
-import GameStatusPopup from './GameStatusPopup'; // Importar o pop-up
+import GameStatusPopup from './GameStatusPopup';
+import PromotionPopUp from './PromotionPopUp';
 
 import game from '../iniciateGame';
 import Tile from '../classes/Tile';
 import Piece from '../classes/Piece';
-import { GameState } from '../classes/Game'; // Importar o GameState
+import { GameState } from '../classes/Game'; 
 
 type BoardComponentProps = {
     tileSize: number;
@@ -83,6 +84,12 @@ export default ({ tileSize, updateHistory }: BoardComponentProps) => {
                     onReset={handleResetGame}
                 />
             )}
+            {game.promoting ? (
+                <PromotionPopUp
+                    tileSize={tileSize * 1.5}
+                    color={!game.turn}
+                />
+            ) : (
             <div className="board-container" style={{
                 gridTemplateColumns: `repeat(8, ${tileSize}px)`,
                 gridTemplateRows: `repeat(8, ${tileSize}px)`,
@@ -118,7 +125,7 @@ export default ({ tileSize, updateHistory }: BoardComponentProps) => {
                     );
                 })}
 
-            </div>
+            </div>)}
             <div className="piece-container">
                 {game.board.pieceList.map(piece => (
                     <div

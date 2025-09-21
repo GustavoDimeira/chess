@@ -8,7 +8,7 @@ import Rook from "./classes/pieces/Rook";
 import Pawn from "./classes/pieces/Pawn";
 import Pos from "./classes/Pos";
 
-const board = new Board(8);
+const board = new Board(8, 8);
 const game = new Game(board, [1000, 1000], true);
 
 // Setup inicial padrão de xadrez

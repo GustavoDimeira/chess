@@ -22,6 +22,7 @@ export default class Game {
     public winner: boolean | null = null; // true for white, false for black
     public gameEndReason: GameEndReason | null = null;
     private timerInterval: NodeJS.Timeout | null = null;
+    private _promoting: boolean = false;
 
     constructor(
         readonly board: Board,
@@ -38,6 +39,10 @@ export default class Game {
 
     get gameState(): GameState {
         return this._gameState;
+    }
+
+    get promoting(): boolean {
+        return this._promoting;
     }
 
     private startTimer(): void {
@@ -299,29 +304,22 @@ export default class Game {
             a => a.symbol === attacker.symbol && a.color === attacker.color
         );
 
-        // Símbolo da peça (peão não mostra símbolo)
         if (attacker.symbol !== "P") {
             finalString += attacker.symbol;
         }
 
-        // --- Regras de desambiguação ---
         if (attacked && attacker.symbol === "P") {
-            // Regra importante: quando PEÃO captura, sempre mostrar a coluna de origem (ex: exd5)
             finalString += file;
         } else if (sameTypeAttackers.length > 1) {
-            // existem outras peças iguais que também atacam → precisamos desambiguar
             const others = sameTypeAttackers.filter(a => a !== attacker);
             const anySameFile = others.some(a => a.position.x === attacker.position.x);
             const anySameRank = others.some(a => a.position.y === attacker.position.y);
 
             if (!anySameFile) {
-                // nenhum outro compartilha a mesma coluna → coluna é suficiente
                 finalString += file;
             } else if (!anySameRank) {
-                // nenhum outro compartilha a mesma linha → linha é suficiente
                 finalString += rank;
             } else {
-                // ainda ambíguo → coluna + linha
                 finalString += file + rank;
             }
         }
@@ -334,6 +332,23 @@ export default class Game {
         finalString += (8 - attacked_tile.position.y).toString();
 
         return finalString;
+    }
+
+    private checkPromotion(piece: Piece): void {
+        if (piece instanceof Pawn) {
+            if (piece.position.y == 7 || piece.position.y == 0) {
+                this._promoting = true
+            }
+        }
+    }
+
+    public promote(piece: Piece): void {
+        if (this._promoting) {
+            this.removePiece(piece);
+            this.addPiece(new Queen(piece.position, piece.color));
+
+            this._promoting = false;
+        }
     }
 
     public movePiece(piece: Piece, destination: Pos): string | boolean {
@@ -361,6 +376,8 @@ export default class Game {
         prev_tile.occupiedBy = null;
         piece.position = destination;
         piece.isFirstMove = false;
+
+        this.checkPromotion(piece);
 
         this._turn = !this._turn;
 
