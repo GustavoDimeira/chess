@@ -49,23 +49,23 @@ export default ({ color, tileSize, game, updatePromoting }: promotionPopUpProp) 
 
     return (
         <div
-            id="promotion-popup"
+            id="promotion-modal"
         >
-            <div className="board-container" style={{
+            <div className="promotion-board" style={{
                 gridTemplateColumns: `repeat(4, ${tileSize}px)`,
                 gridTemplateRows: `repeat(1, ${tileSize}px)`,
             }}>
                 {
                     board.map((line, line_i) => {
                         return (
-                            <div key={line_i} className="line">
+                            <div key={line_i} className="promotion-line">
                                 {line.map((tile, index) => {
                                     const tileColorClass =
-                                        (tile.position.x % 2 === 0) ? 'light' : 'dark';
+                                        (tile.position.x % 2 === 0) ? 'promotion-light' : 'promotion-dark';
                                     return (
                                         <div
                                             key={index}
-                                            className={`tile ${tileColorClass}`}
+                                            className={`promotion-tile ${tileColorClass}`}
                                             style={{ width: tileSize, height: tileSize }}
                                             onClick={() => handlePromote(index)}
                                         />
@@ -77,13 +77,13 @@ export default ({ color, tileSize, game, updatePromoting }: promotionPopUpProp) 
 
                 }
             </div>
-            <div className="piece-container">
+            <div className="promotion-pieces">
                 {pieces.map((piece, index) => (
                     <div
                         key={piece.ID}
-                        className="piece-wrapper"
+                        className="promotion-piece"
                         style={{
-                            transform: `translate(${piece.position.x * tileSize}px, ${piece.position.y * tileSize}px)`,
+                            transform: `translate(${0 * tileSize}px, ${piece.position.y * tileSize}px)`,
                             width: tileSize,
                             height: tileSize,
                         }}

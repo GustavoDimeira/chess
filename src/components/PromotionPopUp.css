@@ -1,4 +1,52 @@
-#promotion-popup * {
-    z-index: 999;
+/*
+  This CSS is designed to create a centered promotion popup with a blurred background,
+  and ensure pieces are correctly aligned over the promotion board.
+  It uses unique class names to avoid conflicts with other components.
+*/
+
+#promotion-modal {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 10000;
+    display: grid;
+    place-content: center;
 }
 
+#promotion-modal > .promotion-board,
+#promotion-modal > .promotion-pieces {
+    grid-area: 1 / 1;
+}
+
+#promotion-modal .promotion-board {
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+/*
+  With unique class names, we don't need to worry about global style conflicts.
+  The default 'position: static' will apply, keeping it in the grid flow.
+*/
+#promotion-modal .promotion-pieces {
+    pointer-events: none;
+}
+
+#promotion-modal .promotion-piece {
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+#promotion-modal .promotion-tile.promotion-light {
+    background-color: #f0d9b5;
+}
+
+#promotion-modal .promotion-tile.promotion-dark {
+    background-color: #b58863;
+}
+
+#promotion-modal .promotion-tile:hover {
+    background-color: #86b369;
+}
